@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BYNX — Next Generation Human Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#000;color:#f0f0f0;font-family:'Syne',sans-serif;overflow-x:hidden;cursor:crosshair}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav-logo{font-size:18px;font-weight:800;letter-spacing:0.14em;color:#fff;text-transform:uppercase}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:#fff}
+.nav-tg{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;color:#ff2d9b;border:1px solid #ff2d9b;padding:8px 20px;text-decoration:none;transition:all 0.2s}
+.nav-tg:hover{background:#ff2d9b;color:#000}
+
+/* VIDEO BG */
+.vid-bg{position:absolute;inset:0;z-index:0}
+.vid-bg video{width:100%;height:100%;object-fit:cover;opacity:0.55}
+.vid-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.5) 60%,rgba(0,0,0,0.95) 100%)}
+
+/* CONTENT */
+.sec-content{position:relative;z-index:2;padding:0 48px}
+
+/* HERO */
+#hero{height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:100px;overflow:hidden;position:relative}
+.hero-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;color:rgba(255,45,155,0.8);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:32px;height:1px;background:#ff2d9b}
+.hero-title{font-size:clamp(72px,11vw,150px);font-weight:800;line-height:0.88;letter-spacing:-0.03em;text-transform:uppercase;color:#fff}
+.hero-title span{display:block;-webkit-text-stroke:1px rgba(255,255,255,0.15);color:transparent}
+.hero-sub{margin-top:24px;font-size:14px;color:rgba(255,255,255,0.45);letter-spacing:0.06em;max-width:480px;line-height:1.6}
+.hero-btns{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;padding:14px 32px;border:1px solid rgba(255,255,255,0.15);color:#fff;transition:all 0.25s;cursor:crosshair;background:transparent}
+.btn:hover{border-color:#ff2d9b;color:#ff2d9b}
+.btn-primary{background:#ff2d9b;border-color:#ff2d9b;color:#000}
+.btn-primary:hover{background:#fff;border-color:#fff;color:#000}
+.btn::after{content:'→'}
+.hero-scroll{position:absolute;bottom:40px;right:48px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;color:rgba(255,255,255,0.3);text-transform:uppercase;writing-mode:vertical-rl;display:flex;align-items:center;gap:10px;z-index:2}
+.hero-scroll::before{content:'';width:1px;height:48px;background:rgba(255,255,255,0.2);animation:scrollAnim 2s ease-in-out infinite}
+@keyframes scrollAnim{0%{opacity:0;transform:scaleY(0);transform-origin:top}50%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(0);transform-origin:bottom}}
+
+/* STANDARD SECTION */
+.std-sec{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.std-sec .sec-content{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding-top:120px;padding-bottom:120px}
+
+.sec-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.22em;color:#ff2d9b;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.sec-tag::before{content:'';width:24px;height:1px;background:#ff2d9b}
+h2{font-size:clamp(36px,5vw,68px);font-weight:800;line-height:0.93;letter-spacing:-0.02em;text-transform:uppercase;color:#fff}
+.sec-text{margin-top:20px;font-size:14px;color:rgba(255,255,255,0.45);line-height:1.75;max-width:400px}
+.sec-cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);margin-top:36px;max-width:400px}
+.sec-card{background:#000;padding:20px 22px}
+.sc-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,45,155,0.7);margin-bottom:6px;font-family:'Space Mono',monospace}
+.sc-val{font-size:13px;color:#fff;font-weight:600}
+
+/* TOKENOMICS */
+#tokenomics{background:#000;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)}
+.tok-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:60px}
+.tok-img{width:100%;border:1px solid rgba(255,255,255,0.06)}
+.tok-table{width:100%;border-collapse:collapse}
+.tok-table thead tr{border-bottom:1px solid rgba(255,255,255,0.08)}
+.tok-table th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;color:rgba(255,255,255,0.3);text-transform:uppercase;padding:12px 0;text-align:left;font-weight:400}
+.tok-table tbody tr{border-bottom:1px solid rgba(255,255,255,0.05)}
+.tok-table td{padding:18px 0;font-size:13px;font-weight:500;color:#fff}
+.tok-dot{display:inline-flex;align-items:center;gap:12px}
+.tok-dot::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.d1::before{background:#ff2d9b}.d2::before{background:#c41aff}.d3::before{background:#e040fb}.d4::before{background:#ff6ec7}.d5::before{background:#666}
+.tok-pct{font-family:'Space Mono',monospace;font-size:13px;color:#ff2d9b}
+
+/* ACCESS LEVELS */
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);margin-top:60px}
+.pkg-card{background:#000;padding:48px 36px;display:flex;flex-direction:column;position:relative;transition:background 0.3s;gap:0}
+.pkg-card:hover{background:rgba(255,45,155,0.03)}
+.pkg-hot{outline:1px solid rgba(255,45,155,0.25);background:rgba(255,45,155,0.03)}
+.pkg-badge{position:absolute;top:20px;right:20px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;color:#ff2d9b;border:1px solid #ff2d9b;padding:4px 8px}
+.pkg-tier{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.22em;color:rgba(255,255,255,0.3);margin-bottom:16px}
+.pkg-price{font-size:58px;font-weight:800;letter-spacing:-0.03em;color:#fff;line-height:1;margin-bottom:32px}
+.pkg-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:36px;flex:1}
+.pkg-list li{font-size:13px;color:rgba(255,255,255,0.45);padding-left:16px;border-left:1px solid rgba(255,255,255,0.08);line-height:1.5}
+
+/* ROADMAP */
+#roadmap{background:#050505;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)}
+.rm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,0.06);margin-top:60px}
+.rm-card{background:#000;padding:40px 28px;position:relative;transition:background 0.3s}
+.rm-card:hover{background:rgba(255,45,155,0.03)}
+.rm-num{font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:rgba(255,255,255,0.03);position:absolute;top:12px;right:16px;line-height:1}
+.rm-phase{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.22em;color:#ff2d9b;text-transform:uppercase;margin-bottom:16px}
+.rm-title{font-size:14px;font-weight:600;color:#fff;line-height:1.3}
+
+/* CTA */
+#cta{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#000;border-top:1px solid rgba(255,255,255,0.06);padding:48px}
+.cta-title{font-size:clamp(52px,9vw,120px);font-weight:800;line-height:0.9;letter-spacing:-0.03em;text-transform:uppercase;color:#fff}
+.cta-title span{-webkit-text-stroke:1px rgba(255,255,255,0.12);color:transparent}
+.cta-sub{margin-top:24px;font-size:14px;color:rgba(255,255,255,0.35);letter-spacing:0.06em}
+.cta-btns{margin-top:48px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+
+/* DISCLAIMER */
+.disclaimer{padding:32px 48px;border-top:1px solid rgba(255,255,255,0.06);background:#000}
+.disc-text{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.18);line-height:1.8;max-width:700px}
+
+/* FOOTER */
+footer{padding:28px 48px;border-top:1px solid rgba(255,255,255,0.06);background:#000;display:flex;justify-content:space-between;align-items:center}
+footer .logo{font-weight:800;font-size:14px;letter-spacing:0.12em;color:#fff}
+footer p{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.2)}
+
+/* FADE */
+.fade{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
+.fade.in{opacity:1;transform:none}
+
+/* NOISE */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35}
+
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-links{display:none}
+  .sec-content{padding:0 20px!important}
+  .std-sec .sec-content{grid-template-columns:1fr;gap:40px}
+  .tok-layout{grid-template-columns:1fr}
+  .pkg-grid{grid-template-columns:1fr}
+  .rm-grid{grid-template-columns:1fr 1fr}
+  .hero-title{font-size:clamp(52px,14vw,80px)}
+  #tokenomics,#roadmap,#access-section{padding:80px 20px}
+  footer{padding:20px;flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">BYNX</div>
+  <ul class="nav-links">
+    <li><a href="#analysis">Technology</a></li>
+    <li><a href="#body">Body Scan</a></li>
+    <li><a href="#tokenomics">Token</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+  <a href="https://t.me/bynx_official" target="_blank" class="nav-tg">Join Telegram</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="vid-bg">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="assets/body.mp4" type="video/mp4">
+    </video>
+    <div class="vid-overlay"></div>
+  </div>
+  <div class="sec-content fade">
+    <div class="hero-tag">Next Generation Human Intelligence</div>
+    <h1 class="hero-title">BYNX<span>AI</span></h1>
+    <p class="hero-sub">Advanced neural scanning system powered by AI technology.</p>
+    <div class="hero-btns">
+      <a href="https://t.me/bynx_official" target="_blank" class="btn btn-primary">Start Mining</a>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn">Join Telegram</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- AI ANALYSIS -->
+<section id="analysis" class="std-sec" style="background:#000">
+  <div class="vid-bg">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="assets/analiz.mp4" type="video/mp4">
+    </video>
+    <div class="vid-overlay" style="background:linear-gradient(to right,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.2) 100%)"></div>
+  </div>
+  <div class="sec-content fade">
+    <div>
+      <div class="sec-tag">02 — AI Analysis</div>
+      <h2>Real-Time<br>AI Analysis</h2>
+      <p class="sec-text">Facial symmetry, skin quality, hydration and neural diagnostics powered by artificial intelligence.</p>
+      <div class="sec-cards">
+        <div class="sec-card"><div class="sc-label">Facial Symmetry</div><div class="sc-val">98.4%</div></div>
+        <div class="sec-card"><div class="sc-label">Skin Quality</div><div class="sc-val">Optimal</div></div>
+        <div class="sec-card"><div class="sc-label">Hydration</div><div class="sc-val">94%</div></div>
+        <div class="sec-card"><div class="sc-label">Neural Metrics</div><div class="sc-val">Active</div></div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- FULL BODY SCAN -->
+<section id="body" class="std-sec" style="background:#020202">
+  <div class="vid-bg">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="assets/body.mp4" type="video/mp4">
+    </video>
+    <div class="vid-overlay" style="background:linear-gradient(to left,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.2) 100%)"></div>
+  </div>
+  <div class="sec-content fade" style="direction:rtl">
+    <div style="direction:ltr"></div>
+    <div style="direction:ltr">
+      <div class="sec-tag">03 — Body Scan</div>
+      <h2>Full Neural<br>Body Mapping</h2>
+      <p class="sec-text">Advanced body scanning and bio-neural visualization technology.</p>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn" style="margin-top:36px">Start Scan</a>
+    </div>
+  </div>
+</section>
+
+<!-- AI CORE -->
+<section id="brain" class="std-sec" style="background:#000">
+  <div class="vid-bg">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="assets/mozg.mp4" type="video/mp4">
+    </video>
+    <div class="vid-overlay" style="background:linear-gradient(to right,rgba(0,0,0,0.92) 35%,rgba(0,0,0,0.15) 100%)"></div>
+  </div>
+  <div class="sec-content fade">
+    <div>
+      <div class="sec-tag">04 — AI Core</div>
+      <h2>Powered by<br>Neural<br>Intelligence</h2>
+      <p class="sec-text">BYNX AI processes millions of neural signals in real time using intelligent system architecture.</p>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn" style="margin-top:36px">Explore AI</a>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- TOKENOMICS -->
+<section id="tokenomics">
+  <div class="fade">
+    <div class="sec-tag">05 — Tokenomics</div>
+    <h2>Token<br>Distribution</h2>
+    <p class="sec-text">Fixed supply designed to support ecosystem growth and community participation.</p>
+  </div>
+  <div class="tok-layout fade">
+    <img class="tok-img" src="assets/chart.png" alt="Token Distribution">
+    <div>
+      <table class="tok-table">
+        <thead><tr><th>Category</th><th>Allocation</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tok-dot d1">Community / Airdrop</span></td><td class="tok-pct">40%</td></tr>
+          <tr><td><span class="tok-dot d2">Liquidity</span></td><td class="tok-pct">25%</td></tr>
+          <tr><td><span class="tok-dot d3">Team</span></td><td class="tok-pct">20%</td></tr>
+          <tr><td><span class="tok-dot d4">Marketing</span></td><td class="tok-pct">10%</td></tr>
+          <tr><td><span class="tok-dot d5">Reserve</span></td><td class="tok-pct">5%</td></tr>
+        </tbody>
+      </table>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn" style="margin-top:40px">Get BYNX</a>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESS LEVELS -->
+<section id="access-section" style="background:#000;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)">
+  <div class="sec-tag fade">06 — Access Levels</div>
+  <h2 class="fade">Access<br>Levels</h2>
+  <div class="pkg-grid fade">
+    <div class="pkg-card">
+      <div class="pkg-tier">BASIC</div>
+      <div class="pkg-price">$30</div>
+      <ul class="pkg-list">
+        <li>Entry to research program</li>
+        <li>+400 BYNX</li>
+        <li>Community access</li>
+      </ul>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn" style="width:100%;justify-content:center">Join Basic</a>
+    </div>
+    <div class="pkg-card pkg-hot">
+      <div class="pkg-badge">POPULAR</div>
+      <div class="pkg-tier">PRO</div>
+      <div class="pkg-price">$80</div>
+      <ul class="pkg-list">
+        <li>Priority updates</li>
+        <li>+2500 BYNX</li>
+        <li>Extended access</li>
+      </ul>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center">Join Pro</a>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-tier">PREMIUM</div>
+      <div class="pkg-price">$200</div>
+      <ul class="pkg-list">
+        <li>Early priority for future testing</li>
+        <li>+7000 BYNX</li>
+        <li>Full access + Early status</li>
+      </ul>
+      <a href="https://t.me/bynx_official" target="_blank" class="btn" style="width:100%;justify-content:center">Join Premium</a>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="sec-tag fade">07 — Roadmap</div>
+  <h2 class="fade">Roadmap</h2>
+  <div class="rm-grid fade">
+    <div class="rm-card"><div class="rm-num">01</div><div class="rm-phase">Phase 1</div><div class="rm-title">Token Launch</div></div>
+    <div class="rm-card"><div class="rm-num">02</div><div class="rm-phase">Phase 2</div><div class="rm-title">Telegram Bot &amp; Mining</div></div>
+    <div class="rm-card"><div class="rm-num">03</div><div class="rm-phase">Phase 3</div><div class="rm-title">Community &amp; Airdrop</div></div>
+    <div class="rm-card"><div class="rm-num">04</div><div class="rm-phase">Phase 4</div><div class="rm-title">Community Growth</div></div>
+    <div class="rm-card"><div class="rm-num">05</div><div class="rm-phase">Phase 5</div><div class="rm-title">DEX Listing</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-title fade">Join the<br><span>BYNX</span><br>Community</div>
+  <p class="cta-sub fade">Limited early access. Be part of the first wave.</p>
+  <div class="cta-btns fade">
+    <a href="https://t.me/bynx_official" target="_blank" class="btn btn-primary">Join Telegram</a>
+    <a href="https://t.me/bynx_official" target="_blank" class="btn">Start Mining</a>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <p class="disc-text">This is a wellness pilot program. BYNX technology is not a medical device and does not provide medical treatment. Results may vary. BYNX token is an experimental digital asset and is not intended as an investment product.</p>
+</div>
+
+<footer>
+  <div class="logo">BYNX</div>
+  <p>© 2025 BYNX — Experimental Digital Asset</p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold: 0.12});
+document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
