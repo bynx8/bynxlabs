@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +58,7 @@ h2{font-size:clamp(36px,5vw,68px);font-weight:800;line-height:0.93;letter-spacin
 .sc-val{font-size:13px;color:#fff;font-weight:600}
 
 /* TOKENOMICS */
-#tokenomics{background:#000;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)}
+#tokenomics{background:#050508;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)}
 .tok-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:60px}
 .tok-img{width:100%;border:1px solid rgba(255,255,255,0.06)}
 .tok-table{width:100%;border-collapse:collapse}
@@ -84,7 +83,7 @@ h2{font-size:clamp(36px,5vw,68px);font-weight:800;line-height:0.93;letter-spacin
 .pkg-list li{font-size:13px;color:rgba(255,255,255,0.45);padding-left:16px;border-left:1px solid rgba(255,255,255,0.08);line-height:1.5}
 
 /* ROADMAP */
-#roadmap{background:#050505;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)}
+#roadmap{background:#000;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)}
 .rm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,0.06);margin-top:60px}
 .rm-card{background:#000;padding:40px 28px;position:relative;transition:background 0.3s}
 .rm-card:hover{background:rgba(255,45,155,0.03)}
@@ -107,6 +106,13 @@ h2{font-size:clamp(36px,5vw,68px);font-weight:800;line-height:0.93;letter-spacin
 footer{padding:28px 48px;border-top:1px solid rgba(255,255,255,0.06);background:#000;display:flex;justify-content:space-between;align-items:center}
 footer .logo{font-weight:800;font-size:14px;letter-spacing:0.12em;color:#fff}
 footer p{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.2)}
+
+/* SECTION DIVIDERS */
+.std-sec::after{content:'';position:absolute;bottom:0;left:48px;right:48px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,45,155,0.15),transparent);pointer-events:none;z-index:3}
+#tokenomics{border-top:1px solid rgba(255,45,155,0.1)!important}
+#access-section{border-top:1px solid rgba(255,255,255,0.04)!important}
+#roadmap{border-top:1px solid rgba(255,45,155,0.08)!important}
+#cta{border-top:1px solid rgba(255,45,155,0.1)!important}
 
 /* FADE */
 .fade{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
@@ -162,9 +168,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- AI ANALYSIS -->
-<section id="analysis" class="std-sec" style="background:#000">
+<section id="analysis" class="std-sec" style="background:#03030a">
   <div class="vid-bg">
-    <video id="vid-hero2" autoplay loop muted playsinline></video>
+    <video id="vid-analiz" autoplay loop muted playsinline></video>
     <div class="vid-overlay" style="background:linear-gradient(to right,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.2) 100%)"></div>
   </div>
   <div class="sec-content fade">
@@ -184,9 +190,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- FULL BODY SCAN -->
-<section id="body" class="std-sec" style="background:#020202">
+<section id="body" class="std-sec" style="background:#000">
   <div class="vid-bg">
-    <video id="vid-analiz" autoplay loop muted playsinline></video>
+    <video id="vid-body" autoplay loop muted playsinline></video>
     <div class="vid-overlay" style="background:linear-gradient(to left,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.2) 100%)"></div>
   </div>
   <div class="sec-content fade" style="direction:rtl">
@@ -201,7 +207,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- AI CORE -->
-<section id="brain" class="std-sec" style="background:#000">
+<section id="brain" class="std-sec" style="background:#05030a">
   <div class="vid-bg">
     <video id="vid-body" autoplay loop muted playsinline></video>
     <div class="vid-overlay" style="background:linear-gradient(to right,rgba(0,0,0,0.92) 35%,rgba(0,0,0,0.15) 100%)"></div>
@@ -243,7 +249,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- ACCESS LEVELS -->
-<section id="access-section" style="background:#000;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)">
+<section id="access-section" style="background:#020208;padding:120px 48px;border-top:1px solid rgba(255,255,255,0.06)">
   <div class="sec-tag fade">06 — Access Levels</div>
   <h2 class="fade">Access<br>Levels</h2>
   <div class="pkg-grid fade">
@@ -295,7 +301,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </section>
 
 <!-- CTA -->
-<section id="cta">
+<section id="cta" style="background:#050508">
   <div class="cta-title fade">Join the<br><span>BYNX</span><br>Community</div>
   <p class="cta-sub fade">Limited early access. Be part of the first wave.</p>
   <div class="cta-btns fade">
@@ -341,7 +347,6 @@ const ANALIZ = "https://customer-mfdnr2ax97xc16g4.cloudflarestream.com/cc3ccf3a3
 const MOZG  = "https://customer-mfdnr2ax97xc16g4.cloudflarestream.com/3b512caf30093d5ee37ace0c7a2f3937/manifest/video.m3u8";
 
 loadHLS('vid-hero',   BODY);
-loadHLS('vid-hero2',  ANALIZ);
 loadHLS('vid-analiz', ANALIZ);
 loadHLS('vid-body',   BODY);
 loadHLS('vid-mozg',   MOZG);
