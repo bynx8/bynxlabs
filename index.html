@@ -127,6 +127,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   footer{padding:20px;flex-direction:column;gap:12px;text-align:center}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
 </head>
 <body>
 
@@ -144,9 +145,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <!-- HERO -->
 <section id="hero">
   <div class="vid-bg">
-    <video autoplay loop muted playsinline preload="auto">
-      <source src="assets/body.mp4" type="video/mp4">
-    </video>
+    <video id="vid-hero" autoplay loop muted playsinline></video>
     <div class="vid-overlay"></div>
   </div>
   <div class="sec-content fade">
@@ -164,9 +163,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <!-- AI ANALYSIS -->
 <section id="analysis" class="std-sec" style="background:#000">
   <div class="vid-bg">
-    <video autoplay loop muted playsinline preload="auto">
-      <source src="assets/analiz.mp4" type="video/mp4">
-    </video>
+    <video id="vid-hero2" autoplay loop muted playsinline></video>
     <div class="vid-overlay" style="background:linear-gradient(to right,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.2) 100%)"></div>
   </div>
   <div class="sec-content fade">
@@ -188,9 +185,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <!-- FULL BODY SCAN -->
 <section id="body" class="std-sec" style="background:#020202">
   <div class="vid-bg">
-    <video autoplay loop muted playsinline preload="auto">
-      <source src="assets/body.mp4" type="video/mp4">
-    </video>
+    <video id="vid-analiz" autoplay loop muted playsinline></video>
     <div class="vid-overlay" style="background:linear-gradient(to left,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.2) 100%)"></div>
   </div>
   <div class="sec-content fade" style="direction:rtl">
@@ -207,9 +202,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <!-- AI CORE -->
 <section id="brain" class="std-sec" style="background:#000">
   <div class="vid-bg">
-    <video autoplay loop muted playsinline preload="auto">
-      <source src="assets/mozg.mp4" type="video/mp4">
-    </video>
+    <video id="vid-body" autoplay loop muted playsinline></video>
     <div class="vid-overlay" style="background:linear-gradient(to right,rgba(0,0,0,0.92) 35%,rgba(0,0,0,0.15) 100%)"></div>
   </div>
   <div class="sec-content fade">
@@ -321,10 +314,36 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </footer>
 
 <script>
+// Fade-in on scroll
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
 }, {threshold: 0.12});
 document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+
+// HLS video loader
+function loadHLS(id, src) {
+  const video = document.getElementById(id);
+  if (!video) return;
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Safari native HLS
+    video.src = src;
+  } else if (Hls.isSupported()) {
+    const hls = new Hls({ autoStartLoad: true, startLevel: -1 });
+    hls.loadSource(src);
+    hls.attachMedia(video);
+  }
+  video.play().catch(() => {});
+}
+
+const BODY  = "https://customer-mfdnr2ax97xc16g4.cloudflarestream.com/48727df528d46f48e2ca1b435eb7ba5a/manifest/video.m3u8";
+const ANALIZ = "https://customer-mfdnr2ax97xc16g4.cloudflarestream.com/cc3ccf3a355b78226af04138a1c145e4/manifest/video.m3u8";
+const MOZG  = "https://customer-mfdnr2ax97xc16g4.cloudflarestream.com/3b512caf30093d5ee37ace0c7a2f3937/manifest/video.m3u8";
+
+loadHLS('vid-hero',   BODY);
+loadHLS('vid-hero2',  BODY);
+loadHLS('vid-analiz', ANALIZ);
+loadHLS('vid-body',   BODY);
+loadHLS('vid-mozg',   MOZG);
 </script>
 </body>
 </html>
