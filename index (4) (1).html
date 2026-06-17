@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BYNX — Adaptive Wellness Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --void:#02010a;--g1:#07060e;--g2:#0b0a17;--g3:#0f0e1c;
+  --f:#d4008a;--f2:#e8109c;--f3:#b8007a;
+  --ftrace:rgba(212,0,138,0.06);--fborder:rgba(212,0,138,0.22);
+  --v:#6d4fc7;--text:#edeaf8;--t2:#8c879e;--t3:#46425c;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);
+  --serif:'Cormorant Garamond',serif;--mono:'DM Mono',monospace;--sans:'Instrument Sans',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--text);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-thumb{background:rgba(212,0,138,0.4);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(2,1,10,0);border-bottom:0.5px solid transparent;transition:all 0.6s ease;}
+nav.scrolled{background:rgba(2,1,10,0.90);backdrop-filter:blur(24px);border-bottom-color:var(--b1);}
+.logo{display:flex;align-items:center;gap:11px;}
+.lm{
+  width:42px;height:42px;border-radius:8px;
+  border:1px solid rgba(232,16,156,0.50);
+  background:rgba(232,16,156,0.08);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:
+    0 0 0 1px rgba(232,16,156,0.10),
+    0 0 22px rgba(232,16,156,0.22),
+    0 0 44px rgba(232,16,156,0.08);
+}
+.lm::before{
+  content:'';position:absolute;
+  width:17px;height:17px;border-radius:50%;
+  border:1.5px solid rgba(232,16,156,0.95);
+  box-shadow:0 0 10px rgba(232,16,156,0.55),0 0 20px rgba(232,16,156,0.20);
+}
+.lm::after{
+  content:'';position:absolute;
+  width:5px;height:5px;border-radius:50%;
+  background:#ff28b8;
+  box-shadow:0 0 10px #ff28b8,0 0 20px rgba(255,40,184,0.70);
+}
+.ln{
+  font-family:var(--sans);
+  font-size:27px;
+  font-weight:600;
+  letter-spacing:0.32em;
+  color:#ffffff;
+  text-shadow:
+    0 0 32px rgba(232,16,156,0.50),
+    0 0 10px rgba(232,16,156,0.24),
+    0 2px 4px rgba(0,0,0,0.70);
+}
+.ls{
+  font-family:var(--mono);
+  font-size:8px;
+  letter-spacing:0.30em;
+  color:rgba(255,255,255,0.52);
+  text-transform:uppercase;
+  margin-top:3px;
+}
+nav ul{display:flex;gap:2.5rem;list-style:none;}
+nav ul a{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;transition:color .3s;}
+nav ul a:hover{color:var(--f2);}
+.nc{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:8px 20px;border:0.5px solid var(--fborder);color:rgba(212,0,138,.85);background:var(--ftrace);border-radius:2px;cursor:pointer;transition:all .3s;}
+
+/* ─────────────────────────────────────────
+   HERO  —  cinematic brain video centrepiece
+───────────────────────────────────────── */
+#hero{
+  position:relative;
+  height:100vh;min-height:740px;
+  overflow:hidden;
+  display:flex;align-items:flex-end;
+  background:#02010a;
+}
+
+/* VIDEO — the brain itself.  Scale large so it fills edge-to-edge. */
+.hero-vid-wrap{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
+}
+#mozg-video{
+  position:absolute;
+  /* Slightly oversized so we can zoom via animation without white bars */
+  width:120%; height:120%;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(1.0);
+  object-fit:cover;object-position:50% 48%;
+  /* Cinematic grade:
+     - brightness 0.55  → dark, moody, controlled
+     - contrast  1.22   → punchy tonal separation
+     - saturate  1.30   → deepens the natural blues/purples in the scan
+     - hue-rotate -12°  → pulls warmth toward cool violet/indigo
+  */
+  filter:brightness(0.55) contrast(1.22) saturate(1.30) hue-rotate(-12deg);
+  animation:brainBreathe 11s ease-in-out infinite;
+  will-change:transform;
+}
+@keyframes brainBreathe{
+  0%,100%{transform:translate(-50%,-50%) scale(1.00);}
+  45%   {transform:translate(-50%,-50%) scale(1.045);}
+  70%   {transform:translate(-50%,-50%) scale(1.030);}
+}
+
+/* ── COLOUR TREATMENT LAYERS stacked above the video ── */
+
+/* 1. Deep vignette — crushes edges, forces eye to centre-brain */
+.layer-vignette{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(
+      ellipse 68% 78% at 52% 47%,
+      transparent 20%,
+      rgba(2,1,10,0.50) 62%,
+      rgba(2,1,10,0.92) 100%
+    ),
+    linear-gradient(to bottom,
+      rgba(2,1,10,0.85) 0%,
+      rgba(2,1,10,0.0) 16%,
+      rgba(2,1,10,0.0) 62%,
+      rgba(2,1,10,1.0) 100%
+    );
+}
+
+/* 2. Fuchsia-violet duotone — luxury neuro signature */
+.layer-tint{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  mix-blend-mode:screen;
+  background:
+    radial-gradient(ellipse 56% 64% at 52% 45%,
+      rgba(130,0,200,0.22) 0%,
+      rgba(90,0,160,0.13) 38%,
+      transparent 72%
+    ),
+    radial-gradient(ellipse 38% 44% at 50% 43%,
+      rgba(200,0,130,0.14) 0%,
+      transparent 65%
+    );
+}
+
+/* 3. Atmospheric depth: a second cinematic grade in CSS */
+.layer-depth{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  /* dark-field vignette with purple cast at periphery */
+  background:
+    radial-gradient(ellipse 90% 90% at 52% 45%,
+      transparent 35%,
+      rgba(30,0,60,0.18) 68%,
+      rgba(15,0,40,0.35) 100%
+    );
+}
+
+/* 4. Fine scanline texture — "live imaging" feel */
+.layer-scan{
+  position:absolute;inset:0;z-index:4;pointer-events:none;
+  opacity:0.022;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0) 0px,
+    rgba(255,255,255,0) 2px,
+    rgba(255,255,255,0.7) 2px,
+    rgba(255,255,255,0.7) 3px
+  );
+}
+
+/* 5. Travelling analysis sweep */
+.layer-sweep{
+  position:absolute;left:0;right:0;height:1.5px;z-index:5;pointer-events:none;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(212,0,138,0.0) 12%,
+    rgba(212,0,138,0.55) 38%,
+    rgba(255,200,255,0.85) 50%,
+    rgba(212,0,138,0.55) 62%,
+    rgba(212,0,138,0.0) 88%,
+    transparent 100%
+  );
+  box-shadow:0 0 12px rgba(212,0,138,0.35),0 0 28px rgba(180,0,200,0.15);
+  animation:sweepDown 10s linear infinite;
+}
+@keyframes sweepDown{
+  0%  {top:0%;  opacity:0;}
+  4%  {opacity:1;}
+  90% {opacity:0.65;}
+  100%{top:100%;opacity:0;}
+}
+
+/* 6. Neural pathway canvas — energy lines ON TOP of video */
+#pathways-canvas{
+  position:absolute;inset:0;z-index:6;
+  width:100%;height:100%;
+  pointer-events:none;
+  /* blend mode makes the lines merge beautifully with the video beneath */
+  mix-blend-mode:screen;
+}
+
+/* ── HERO INTERFACE CHROME ── */
+.hero-chrome{position:absolute;inset:0;z-index:7;pointer-events:none;}
+
+.hud-tl{position:absolute;top:86px;left:4rem;font-family:var(--mono);font-size:7.5px;letter-spacing:.2em;color:rgba(212,0,138,0.5);border:0.5px solid rgba(212,0,138,0.12);padding:3px 9px;background:rgba(2,1,10,0.45);backdrop-filter:blur(6px);}
+.hud-tr{position:absolute;top:86px;right:4rem;font-family:var(--mono);font-size:7.5px;letter-spacing:.2em;color:rgba(212,0,138,0.5);border:0.5px solid rgba(212,0,138,0.12);padding:3px 9px;background:rgba(2,1,10,0.45);backdrop-filter:blur(6px);}
+.hud-bc{position:absolute;bottom:5.5rem;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:rgba(212,0,138,0.4);}
+
+.corner-tl{position:absolute;top:82px;left:4rem;width:20px;height:20px;border-top:0.5px solid rgba(255,255,255,0.12);border-left:0.5px solid rgba(255,255,255,0.12);}
+.corner-tr{position:absolute;top:82px;right:4rem;width:20px;height:20px;border-top:1px solid rgba(212,0,138,0.35);border-right:1px solid rgba(212,0,138,0.35);}
+
+/* Live status badge — right edge, vertical */
+.live-rail{
+  position:absolute;top:50%;right:3.5rem;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+}
+.live-line{width:0.5px;height:50px;background:linear-gradient(to bottom,transparent,rgba(212,0,138,0.35),transparent);}
+.live-item{
+  font-family:var(--mono);font-size:7px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(212,0,138,0.45);display:flex;align-items:center;gap:6px;
+}
+.live-item::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--f2);animation:lpulse 3s ease-in-out infinite;}
+@keyframes lpulse{0%,100%{opacity:.3;}55%{opacity:1;}}
+
+/* ── HERO TEXT UI ── */
+.hero-ui{
+  position:relative;z-index:8;
+  width:100%;padding:0 4rem 5rem;
+}
+.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:3rem;}
+.hero-left{max-width:600px;}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:7.5px;letter-spacing:.35em;text-transform:uppercase;
+  color:rgba(212,0,138,0.60);
+  border:0.5px solid rgba(212,0,138,0.18);border-radius:1px;
+  padding:5px 12px;display:inline-block;margin-bottom:1.75rem;
+  background:rgba(212,0,138,0.04);backdrop-filter:blur(6px);
+}
+.hero-h1{
+  font-family:var(--sans);
+  font-size:84px;font-weight:900;line-height:1.0;letter-spacing:-0.03em;
+  color:#f5f0ff;
+  text-shadow:0 4px 60px rgba(100,0,150,0.55),0 0 120px rgba(100,0,180,0.25);
+}
+.hero-h1 em{font-style:normal;font-weight:900;color:#ff18b0;text-shadow:0 0 36px rgba(255,24,176,0.70),0 0 80px rgba(220,0,150,0.35);}
+.hero-sub{
+  font-size:15px;color:rgba(190,180,220,0.68);line-height:1.85;
+  margin-top:1.1rem;max-width:430px;
+  text-shadow:0 1px 12px rgba(0,0,0,0.8);
+}
+.hero-ctas{display:flex;gap:11px;margin-top:1.9rem;}
+.btn-pri{
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:13px 30px;
+  background:var(--f2);color:#fff;border:none;border-radius:2px;cursor:pointer;
+  box-shadow:0 0 30px rgba(212,0,138,0.45),0 0 70px rgba(212,0,138,0.12);
+  transition:all .35s;
+}
+.btn-pri:hover{box-shadow:0 0 44px rgba(212,0,138,0.68),0 0 90px rgba(212,0,138,0.2);transform:translateY(-1px);}
+.btn-sec{
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:13px 26px;
+  background:rgba(255,255,255,0.04);color:rgba(205,195,228,0.65);
+  border:0.5px solid rgba(255,255,255,0.11);border-radius:2px;cursor:pointer;
+  backdrop-filter:blur(6px);transition:all .3s;
+}
+.btn-sec:hover{border-color:var(--fborder);color:var(--f2);}
+
+/* Metrics — right side */
+.hero-metrics{display:flex;flex-direction:column;gap:1.8rem;flex-shrink:0;text-align:right;}
+.hm-val{
+  font-family:var(--serif);font-size:34px;font-weight:300;
+  color:rgba(245,240,255,0.88);line-height:1;
+  text-shadow:0 0 28px rgba(160,0,180,0.40);
+}
+.hm-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:rgba(255,255,255,0.25);text-transform:uppercase;margin-top:3px;}
+
+.scroll-cue{
+  position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);z-index:8;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:7px;letter-spacing:.25em;color:rgba(255,255,255,0.18);
+  animation:scuea 2.8s ease-in-out infinite;
+}
+.scroll-cue::after{content:'';width:0.5px;height:28px;background:linear-gradient(var(--f2),transparent);}
+@keyframes scuea{0%,100%{opacity:.3;transform:translateX(-50%) translateY(0);}58%{opacity:.7;transform:translateX(-50%) translateY(5px);}}
+
+/* ─────────────────────────────────────────
+   REMAINING SECTIONS (unchanged from v5)
+───────────────────────────────────────── */
+.pad{padding:6.5rem 4rem;}.bd{border-bottom:.5px solid var(--b1);}
+.ey{font-family:var(--mono);font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,0,138,.7);display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
+.ey::before{content:'';width:22px;height:.5px;background:var(--f2);flex-shrink:0;}.ey.cx{justify-content:center;}
+h2.d{font-family:var(--serif);font-size:50px;font-weight:300;line-height:1.08;letter-spacing:-.01em;}
+.em{font-style:italic;color:var(--f2);}.blg{font-size:15px;color:var(--t2);line-height:1.85;}
+.chip{font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:3px 9px;border-radius:1px;background:var(--ftrace);color:rgba(212,0,138,.6);border:.5px solid var(--fborder);display:inline-block;}
+.btn-p{font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:14px 34px;background:var(--f2);color:#fff;border:none;border-radius:2px;cursor:pointer;box-shadow:0 0 32px rgba(212,0,138,.55),0 0 70px rgba(212,0,138,.20);transition:all .35s;}
+.btn-p:hover{box-shadow:0 0 36px rgba(212,0,138,.55);transform:translateY(-1px);}
+.btn-g{font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:13px 26px;background:transparent;color:var(--t2);border:.5px solid var(--b2);border-radius:2px;cursor:pointer;transition:all .3s;}
+.btn-g:hover{border-color:var(--fborder);color:var(--f2);}
+/* ── STANDARD SECTION ── */
+#standard{
+  position:relative;
+  background:var(--void);
+  overflow:hidden;
+}
+/* Atmospheric brain canvas — fills the section background */
+#std-brain-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  mix-blend-mode:screen;
+  opacity:0.9;
+}
+/* Dark atmospheric overlay — keeps content readable */
+.std-overlay{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 100% at 65% 50%,
+      rgba(2,1,10,0.0) 0%,
+      rgba(2,1,10,0.25) 55%,
+      rgba(2,1,10,0.75) 100%
+    ),
+    linear-gradient(to right,
+      rgba(2,1,10,0.88) 0%,
+      rgba(2,1,10,0.55) 32%,
+      rgba(2,1,10,0.10) 60%,
+      rgba(2,1,10,0.30) 100%
+    ),
+    linear-gradient(to bottom,
+      rgba(2,1,10,0.65) 0%,
+      rgba(2,1,10,0.0) 18%,
+      rgba(2,1,10,0.0) 82%,
+      rgba(2,1,10,0.65) 100%
+    );
+}
+.std-content{
+  position:relative;z-index:2;
+  display:grid;
+  grid-template-columns:560px 1fr;
+  gap:0;
+  align-items:center;
+  min-height:640px;
+  padding:7rem 4rem;
+}
+.std-left{max-width:520px;}
+.pillars{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  margin-top:3rem;background:rgba(255,255,255,0.04);
+  border-radius:4px;overflow:hidden;
+}
+.pil{
+  background:rgba(7,6,14,0.55);
+  backdrop-filter:blur(12px);
+  padding:1.6rem;
+  border:0.5px solid rgba(255,255,255,0.04);
+  transition:background .4s,border-color .4s;
+}
+.pil:hover{
+  background:rgba(15,14,28,0.70);
+  border-color:rgba(212,0,138,0.15);
+}
+.pn{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--t3);margin-bottom:.6rem;}
+.pt{font-size:13px;font-weight:600;color:var(--text);margin-bottom:.4rem;}
+.pb{font-size:11.5px;color:var(--t2);line-height:1.65;}
+#how{background:var(--void);}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:.5px;background:var(--b1);border-radius:4px;overflow:hidden;}
+.step{background:var(--g2);padding:2.25rem 1.6rem;position:relative;transition:background .3s;}.step:hover{background:var(--g3);}
+.step::after{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:linear-gradient(90deg,transparent,var(--f2),transparent);opacity:0;transition:opacity .35s;}.step:hover::after{opacity:.4;}
+.sn{font-family:var(--serif);font-size:46px;font-weight:300;color:rgba(212,0,138,.1);line-height:1;margin-bottom:1.25rem;}
+.st{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:.6rem;}.sb{font-size:11.5px;color:var(--t2);line-height:1.72;}
+#analysis{background:var(--void);border-bottom:.5px solid var(--b1);}
+.vid-section{display:grid;grid-template-columns:1fr 1fr;min-height:72vh;}
+.vid-pane{position:relative;overflow:hidden;}
+.vid-pane video{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.78) contrast(1.1) saturate(.7);}
+.vp-ov{position:absolute;inset:0;background:linear-gradient(to right,transparent 50%,rgba(2,1,10,.9) 100%),linear-gradient(to bottom,rgba(2,1,10,.45),transparent 18%,transparent 82%,rgba(2,1,10,.55));}
+.vid-label{position:absolute;top:1.5rem;left:1.5rem;font-family:var(--mono);font-size:7.5px;letter-spacing:.2em;color:rgba(212,0,138,.6);border:.5px solid rgba(212,0,138,.18);padding:4px 10px;background:rgba(2,1,10,.65);}
+.vid-live{position:absolute;top:1.5rem;right:1.5rem;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;color:rgba(212,0,138,.6);display:flex;align-items:center;gap:6px;}
+.vid-live::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--f2);animation:lpulse 3s ease-in-out infinite;}
+.vid-text-pane{background:var(--g1);display:flex;align-items:center;padding:4rem;}.vtp-inner{max-width:420px;}
+.a-stats{display:grid;grid-template-columns:1fr 1fr;gap:.5px;margin-top:2.5rem;background:var(--b1);border-radius:4px;overflow:hidden;}
+.ast{background:var(--g2);padding:1.1rem 1.25rem;}.ast-v{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--text);line-height:1;opacity:.9;}.ast-l{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--t3);margin-top:4px;}
+.scan-bar{height:1px;margin-top:1.75rem;background:var(--b1);}.scan-inner{height:100%;background:linear-gradient(90deg,var(--f3),var(--v));animation:sw 4s ease-in-out infinite alternate;}@keyframes sw{from{width:55%;}to{width:94.7%;}}
+.scan-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--t3);margin-top:.5rem;}
+#dashboard{background:var(--g1);}
+.db-mockup{background:var(--g2);border:.5px solid rgba(255,255,255,.07);border-radius:8px;overflow:hidden;}
+.db-bar{background:var(--g3);padding:.85rem 1.4rem;border-bottom:.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
+.db-dots{display:flex;gap:5px;}.dbd{width:8px;height:8px;border-radius:50%;}
+.db-title{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--t3);}
+.db-live-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:rgba(212,0,138,.6);display:flex;align-items:center;gap:5px;}
+.db-live-lbl::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--f2);animation:lpulse 3s infinite;}
+.db-body{display:grid;grid-template-columns:196px 1fr 214px;min-height:370px;}
+.db-side{border-right:.5px solid var(--b1);padding:1.1rem;}
+.dn{padding:.55rem .7rem;border-radius:2px;font-family:var(--mono);font-size:8.5px;letter-spacing:.07em;color:var(--t3);margin-bottom:2px;cursor:default;transition:all .2s;}
+.dn.on{background:var(--ftrace);color:rgba(212,0,138,.7);border-left:1.5px solid var(--f2);}.dn:hover:not(.on){background:var(--b1);color:var(--t2);}
+.ds{font-family:var(--mono);font-size:7.5px;letter-spacing:.2em;color:var(--t3);padding:.65rem .7rem .25rem;text-transform:uppercase;opacity:.6;}
+.db-main{padding:1.6rem;}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.5px;margin-bottom:1.25rem;background:var(--b1);border-radius:3px;overflow:hidden;}
+.kpi{background:var(--g3);padding:.85rem 1.1rem;}.kv{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--text);line-height:1;opacity:.9;}
+.kl{font-family:var(--mono);font-size:8px;letter-spacing:.09em;color:var(--t3);margin-top:3px;}.kd{font-family:var(--mono);font-size:7.5px;color:rgba(212,0,138,.5);margin-top:2px;}
+.chart-box{background:var(--g3);border-radius:3px;padding:1.1rem;height:165px;}
+.cl-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--t3);margin-bottom:.75rem;opacity:.7;}.wv{width:100%;height:100px;}
+.db-right{border-left:.5px solid var(--b1);padding:1.1rem;display:flex;flex-direction:column;gap:.75rem;}
+.dw{background:var(--g3);border-radius:3px;padding:.9rem;flex:1;}.dwt{font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--t3);margin-bottom:.65rem;opacity:.7;}
+.ai{display:flex;align-items:center;gap:7px;padding:.35rem 0;border-bottom:.5px solid rgba(255,255,255,.04);}.ai:last-child{border-bottom:none;}
+.aid{width:4px;height:4px;border-radius:50%;flex-shrink:0;}.ait{font-size:10px;color:var(--t2);}.atime{font-family:var(--mono);font-size:7.5px;color:var(--t3);margin-left:auto;}
+.sp{display:flex;align-items:flex-end;gap:2px;height:38px;}.spb{flex:1;background:rgba(255,255,255,.06);}.spb.hi{background:rgba(212,0,138,.35);}.spb.mid{background:rgba(109,79,199,.3);}
+#body-map{background:var(--void);border-bottom:.5px solid var(--b1);}
+.bvs{display:grid;grid-template-columns:1fr 1fr;min-height:72vh;}
+.bvid-pane{position:relative;overflow:hidden;}.bvid-pane video{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.78) contrast(1.1) saturate(.7);}
+.bvp-ov{position:absolute;inset:0;background:linear-gradient(to left,transparent 50%,rgba(2,1,10,.88) 100%),linear-gradient(to bottom,rgba(2,1,10,.35),transparent 18%,transparent 82%,rgba(2,1,10,.5));}
+.bvid-text{background:var(--g1);display:flex;align-items:center;padding:4rem;}.bvt-inner{max-width:420px;}
+.bpoints{display:flex;flex-direction:column;gap:1.5rem;margin-top:2.5rem;}
+.bp{border-left:1px solid rgba(255,255,255,.05);padding-left:1.2rem;transition:border-color .4s;}.bp:hover{border-color:rgba(212,0,138,.35);}
+.bpr{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:rgba(212,0,138,.6);margin-bottom:.3rem;}
+.bpt{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:.3rem;}.bpd{font-size:11.5px;color:var(--t2);line-height:1.65;}.bpv{font-family:var(--mono);font-size:9.5px;color:rgba(212,0,138,.5);margin-top:.4rem;}
+#powered{background:var(--g1);text-align:center;}
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:.5px;background:var(--b1);border-radius:4px;overflow:hidden;text-align:left;margin-top:3.5rem;}
+.tc{background:var(--g2);padding:2.25rem 1.75rem;position:relative;transition:background .3s;}.tc:hover{background:var(--g3);}
+.tc::after{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:linear-gradient(90deg,transparent,var(--f2),transparent);opacity:0;transition:opacity .4s;}.tc:hover::after{opacity:.4;}
+.tci{width:38px;height:38px;border-radius:6px;background:var(--ftrace);border:.5px solid var(--fborder);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
+.tci svg{width:16px;height:16px;stroke:rgba(212,0,138,.7);fill:none;stroke-width:1.5;}
+.tct{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:.55rem;}.tcb{font-size:11.5px;color:var(--t2);line-height:1.72;}.tcs{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--t3);margin-top:.9rem;}
+#foundation{background:var(--void);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--b1);margin-top:3.5rem;}
+.fc{background:var(--g2);padding:3rem 2.75rem;border-right:.5px solid var(--b1);border-bottom:.5px solid var(--b1);transition:background .3s;}.fc:nth-child(even){border-right:none;}.fc:hover{background:var(--g3);}
+.fcn{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--t3);margin-bottom:.85rem;}.fct{font-size:17px;font-weight:600;color:var(--text);margin-bottom:.6rem;}.fcb{font-size:12px;color:var(--t2);line-height:1.75;}
+#team{background:var(--g1);}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5px;background:rgba(212,0,138,.08);border-radius:4px;overflow:hidden;margin-top:3.5rem;}
+.tcard{
+  background:rgba(11,10,23,0.82);
+  backdrop-filter:blur(6px);
+  display:flex;gap:1.25rem;padding:2rem;
+  align-items:flex-start;
+  transition:background .4s;
+  position:relative;
+}
+.tcard::after{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:linear-gradient(90deg,transparent,var(--f2),transparent);opacity:0;transition:opacity .35s;}.tcard:hover{background:rgba(16,14,28,0.92);}.tcard:hover::after{opacity:.4;}
+.tport{
+  width:72px;height:90px;flex-shrink:0;
+  border-radius:3px;overflow:hidden;
+  border:.5px solid rgba(212,0,138,.18);
+  position:relative;
+}
+/* Cinematic grain + slight blur overlay on portrait */
+.tport::after{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)' opacity='0.10'/%3E%3C/svg%3E"),
+    linear-gradient(135deg,rgba(8,6,20,0.18) 0%,rgba(4,3,10,0.08) 50%,rgba(12,8,24,0.22) 100%);
+  mix-blend-mode:multiply;
+  pointer-events:none;
+  border-radius:3px;
+}
+.tport img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;filter:brightness(.58) contrast(0.85) saturate(.50) grayscale(.30) sepia(.12);}
+.tinfo{flex:1;}.trole{font-family:var(--mono);font-size:7.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(212,0,138,.50);margin-bottom:6px;}
+.tname{font-family:var(--serif);font-size:20px;font-weight:400;color:rgba(248,244,255,0.95);margin-bottom:7px;line-height:1.1;letter-spacing:0.01em;}.tbio{font-size:11px;color:rgba(140,135,158,0.80);line-height:1.70;}.tspec{font-family:var(--mono);font-size:7px;letter-spacing:.12em;color:rgba(70,66,92,0.80);margin-top:8px;}
+#roadmap{background:var(--void);}
+.rmg{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-top:3.5rem;}
+.rmt{position:relative;padding-left:2.5rem;}.rmt::before{content:'';position:absolute;left:0;top:0;bottom:0;width:.5px;background:linear-gradient(to bottom,var(--f2),rgba(212,0,138,.05));}
+.rmi{position:relative;padding-bottom:2.75rem;}.rmi:last-child{padding-bottom:0;}
+.rmd{position:absolute;left:-2.5rem;top:5px;width:7px;height:7px;border-radius:50%;background:var(--f2);transform:translateX(-3px);}.rmd.fut{background:var(--g3);border:.5px solid rgba(212,0,138,.25);}
+.rmq{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:rgba(212,0,138,.55);margin-bottom:.4rem;}.rmt2{font-size:16px;font-weight:600;color:var(--text);margin-bottom:.4rem;}.rmde{font-size:12px;color:var(--t2);line-height:1.72;max-width:380px;}
+.rmtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:.65rem;}.rmtag{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;padding:3px 8px;border-radius:1px;background:var(--ftrace);color:rgba(212,0,138,.5);border:.5px solid var(--fborder);}
+.rmtag.done{background:rgba(109,79,199,.08);color:rgba(109,79,199,.7);border-color:rgba(109,79,199,.2);}
+/* ── TOKEN SECTION ── */
+#token{background:var(--g1);position:relative;overflow:hidden;}
+#token::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 20% 50%,rgba(30,80,200,0.07) 0%,transparent 65%),radial-gradient(ellipse 40% 55% at 65% 45%,rgba(70,40,180,0.05) 0%,transparent 65%);}
+.tok-wrap{position:relative;z-index:1;display:grid;grid-template-columns:380px 300px 1fr;gap:0;align-items:start;margin-top:2.5rem;padding-left:1rem;}
+.tok-chart-col{display:flex;flex-direction:column;align-items:center;gap:0;padding-right:2rem;border-right:0.5px solid rgba(255,255,255,0.06);}
+.tok-chart-wrap{position:relative;width:380px;height:380px;}
+.tok-chart-wrap canvas{position:absolute;inset:0;width:100%;height:100%;}
+.tok-center-label{display:none;}
+.tcv{font-family:var(--sans);font-size:44px;font-weight:900;color:#ffffff;line-height:1;letter-spacing:0.16em;text-shadow:0 0 28px rgba(100,170,255,0.50),0 2px 10px rgba(0,0,0,0.80);}
+.tcl{font-family:var(--mono);font-size:11.5px;letter-spacing:0.06em;color:rgba(200,215,255,0.88);text-transform:uppercase;margin-top:6px;line-height:1.65;text-align:center;font-weight:500;}
+.tok-stats{display:none;}
+.ts-cell{display:none;}
+.ts-label{display:none;}
+.ts-val{display:none;}
+.tok-table-col{display:flex;flex-direction:column;padding:0 2rem 0 3rem;border-right:0.5px solid rgba(255,255,255,0.14);}
+.tok-table-header{display:flex;justify-content:space-between;padding-bottom:0.65rem;border-bottom:0.5px solid rgba(255,255,255,0.10);margin-bottom:0;}
+.tok-th{font-family:var(--mono);font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(160,185,240,0.70);}
+.tok-row{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;padding:1.15rem 0;border-bottom:0.5px solid rgba(255,255,255,0.07);min-height:68px;}
+.tok-row:last-child{border-bottom:none;}
+.tok-row-left{display:flex;align-items:center;gap:9px;}
+.tok-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.tok-label{font-family:var(--sans);font-size:15px;font-weight:600;color:#ffffff;white-space:nowrap;letter-spacing:0.005em;}
+.tok-pct{font-family:var(--sans);font-size:28px;font-weight:800;line-height:1;white-space:nowrap;text-align:right;min-width:60px;}
+.tok-desc-col{display:flex;flex-direction:column;padding-left:3.5rem;border-left:0.5px solid rgba(255,255,255,0.14);}
+.tok-desc-row{display:flex;flex-direction:column;justify-content:center;padding:1.15rem 0;border-bottom:0.5px solid rgba(255,255,255,0.07);min-height:68px;}
+.tok-desc-row:last-child{border-bottom:none;}
+.tok-desc-name{font-size:14px;font-weight:700;color:#ffffff;margin-bottom:6px;letter-spacing:0.01em;}
+.tok-desc-text{font-size:12.5px;color:rgba(195,210,242,0.90);line-height:1.65;}
+.tok-trust{position:relative;z-index:1;margin-top:2.5rem;display:flex;align-items:center;gap:1.75rem;padding:1.2rem 2rem;background:rgba(10,14,32,0.70);border:0.5px solid rgba(60,100,200,0.16);border-left:2px solid rgba(60,120,255,0.28);border-radius:6px;backdrop-filter:blur(12px);}
+.tok-trust-icon{width:40px;height:40px;flex-shrink:0;border:0.5px solid rgba(60,130,255,0.24);border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(20,40,100,0.28);}
+.tok-trust-icon svg{width:18px;height:18px;stroke:rgba(100,170,255,0.75);fill:none;stroke-width:1.5;}
+.tok-trust-divider{width:0.5px;height:36px;flex-shrink:0;background:linear-gradient(to bottom,transparent,rgba(60,110,220,0.25),transparent);}
+.tok-trust-title{font-family:var(--sans);font-size:14px;font-weight:600;color:rgba(225,232,255,0.94);margin-bottom:5px;letter-spacing:0.01em;}
+.tok-trust-desc{font-size:12px;color:rgba(140,160,210,0.72);line-height:1.65;max-width:580px;}
+.tok-trust-badge{margin-left:auto;flex-shrink:0;font-family:var(--mono);font-size:7px;letter-spacing:0.20em;text-transform:uppercase;color:rgba(80,140,255,0.38);border:0.5px solid rgba(60,110,220,0.14);padding:4px 10px;border-radius:2px;white-space:nowrap;}
+background:var(--void);}
+.pkgs{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:auto;
+  gap:1.25rem;
+  margin-top:0;
+  align-items:start;
+  width:100%;
+}
+.pkg{
+  background:rgba(10,8,22,0.85);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+  padding:1.6rem 1.75rem 1.6rem;
+  position:relative;
+  transition:border-color .35s,transform .35s;
+  display:block;
+}
+.pkg:hover{border-color:rgba(212,0,138,0.25);transform:translateY(-2px);}
+.pkg.feat{
+  background:rgba(30,12,55,0.92);
+  border:1px solid rgba(212,0,138,0.30);
+  box-shadow:0 0 60px rgba(212,0,138,0.08),inset 0 0 40px rgba(120,0,100,0.06);
+}
+.pkg.feat:hover{border-color:rgba(212,0,138,0.55);transform:translateY(-3px);}
+.pbadge{
+  font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;display:inline-block;margin-bottom:1rem;
+  width:fit-content;
+}
+.pb-free{background:rgba(255,255,255,0.06);color:rgba(200,200,220,0.60);border:0.5px solid rgba(255,255,255,0.10);}
+.pb-pro{background:rgba(212,0,138,0.15);color:rgba(232,100,200,0.90);border:0.5px solid rgba(212,0,138,0.35);}
+.pb-ent{background:rgba(109,79,199,0.12);color:rgba(160,130,240,0.85);border:0.5px solid rgba(109,79,199,0.28);}
+
+/* Big pricing number — the hero of each card */
+.pkg-tier{
+  font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+  color:rgba(180,180,210,0.55);margin-bottom:0.35rem;
+}
+.pkg-price{
+  font-family:var(--sans);font-size:46px;font-weight:900;line-height:1;
+  color:#ffffff;letter-spacing:-0.02em;
+  margin-bottom:0.3rem;
+}
+.pkg-price .currency{font-size:28px;font-weight:700;vertical-align:top;margin-top:8px;display:inline-block;}
+.pkg.feat .pkg-price{
+  color:#ffffff;
+  text-shadow:0 0 40px rgba(212,0,138,0.35);
+}
+.pprice{
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  color:rgba(160,150,190,0.60);margin-bottom:0.9rem;
+}
+.pdiv{height:1px;background:rgba(255,255,255,0.08);margin-bottom:0.9rem;}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:.38rem;}
+.pfeats li{
+  font-size:12.5px;color:rgba(210,208,230,0.82);
+  padding-left:1.25rem;position:relative;line-height:1.35;
+}
+.pfeats li::before{
+  content:'→';position:absolute;left:0;
+  color:rgba(212,0,138,0.55);font-size:10px;top:2px;
+}
+.pkg.feat .pfeats li{color:rgba(225,215,245,0.88);}
+.pfeats li.off{color:rgba(140,130,160,0.35);}
+.pfeats li.off::before{content:'—';color:rgba(120,110,140,0.30);}
+.pcta{
+  width:100%;margin-top:1.1rem;display:block;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  padding:14px;border-radius:4px;cursor:pointer;transition:all .3s;
+  font-weight:600;
+}
+.pc-p{
+  background:var(--f2);color:#fff;border:none;
+  box-shadow:0 0 24px rgba(212,0,138,0.40),0 0 60px rgba(212,0,138,0.12);
+}
+.pc-p:hover{background:var(--f);box-shadow:0 0 36px rgba(212,0,138,0.60);}
+.pc-o{
+  background:transparent;color:rgba(210,205,230,0.70);
+  border:1px solid rgba(255,255,255,0.14);
+}
+.pc-o:hover{border-color:rgba(212,0,138,0.35);color:rgba(232,100,200,0.85);}
+#quote-section{background:var(--g1);text-align:center;padding:5rem 4rem 4.5rem;border-bottom:.5px solid var(--b1);position:relative;overflow:hidden;}
+#quote-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(212,0,138,.04) 0%,transparent 70%);pointer-events:none;}
+.fq{font-family:var(--serif);font-size:46px;font-weight:300;font-style:italic;line-height:1.24;color:var(--text);max-width:760px;margin:0 auto;opacity:.9;}
+.qa{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:rgba(180,168,210,0.72);margin-top:2rem;}
+#cta-section{background:var(--void);text-align:center;padding:4.5rem 4rem 6rem;position:relative;overflow:hidden;border-bottom:none;}
+#cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 100%,rgba(212,0,138,.04) 0%,transparent 70%);}
+.ctac{position:relative;z-index:1;}.ctabtns{display:flex;gap:1rem;justify-content:center;margin-top:1.75rem;}
+footer{padding:2.25rem 4rem;border-top:.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;background:var(--g1);}
+.ftc{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--t3);}.ftl{display:flex;gap:2rem;}
+.ftl a{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--t3);text-decoration:none;transition:color .2s;}.ftl a:hover{color:rgba(212,0,138,.7);}
+</style>
+</head>
+<body>
+
+<nav id="mainnav">
+  <div class="logo" style="gap:13px;"><div class="lm"></div><div style="display:flex;flex-direction:column;gap:1px;"><div class="ln">BYNX</div><div class="ls">Neural Labs</div></div></div>
+  <ul>
+    <li><a href="#how">Platform</a></li><li><a href="#powered">Technology</a></li>
+    <li><a href="#roadmap">Roadmap</a></li><li><a href="#access">Access</a></li>
+  </ul>
+  <button class="nc">Request Access →</button>
+</nav>
+
+<section id="hero">
+
+  
+  <div class="hero-vid-wrap">
+    <video id="mozg-video" autoplay muted loop playsinline>
+      <source src="mozg.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  
+  <div class="layer-vignette"></div>
+  <div class="layer-tint"></div>
+  <div class="layer-depth"></div>
+  <div class="layer-scan"></div>
+  <div class="layer-sweep"></div>
+
+  
+  <canvas id="pathways-canvas"></canvas>
+
+  
+  <div class="hero-chrome">
+    <div class="corner-tl"></div>
+    <div class="corner-tr"></div>
+    <div class="hud-tl">BYNX · CORTEX·MAP · v2.4</div>
+    <div class="hud-tr">SESSION #4821 · ACTIVE</div>
+    <div class="hud-bc">NEURAL DECODE STREAM · 94.7% COHERENCE</div>
+    <div class="live-rail">
+      <div class="live-item">LIVE ANALYSIS</div>
+      <div class="live-line"></div>
+      <div class="live-item">128+ · 0.3s</div>
+      <div class="live-line"></div>
+      <div class="live-item">99.1% ACCURACY</div>
+    </div>
+  </div>
+
+  
+  <div class="hero-ui">
+    <div class="hero-row">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Live Biofield Analysis &nbsp;·&nbsp; Experimental Wellness Technology &nbsp;·&nbsp; Limited Access</div>
+        <div class="hero-h1" style="font-size:76px;line-height:0.98;margin-bottom:0.35rem;"><span style="font-family:var(--mono);font-size:13px;letter-spacing:0.32em;font-weight:400;color:rgba(255,255,255,0.55);display:block;margin-bottom:0.9rem;font-style:normal;">Next-Generation Human Optimization</span><em>BYNX AI</em></div>
+        <div class="hero-sub" style="max-width:520px;">An experimental AI-powered ecosystem designed to explore energetic balance, adaptive bio-signals, neural interaction, recovery rhythm, and human state optimization through evolving intelligent systems.<br><br>BYNX combines real-time analysis, wellness interpretation, behavioral patterns, and adaptive AI technologies to help users better understand focus, stress response, recovery flow, and personal energetic balance.<br><br><span style="color:rgba(200,180,220,0.50);font-size:13px;">Built as a futuristic platform for wellness exploration and adaptive human intelligence.</span></div>
+        <div class="hero-ctas">
+          <a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener"><button class="btn-pri">Join Early Access</button></a>
+          <button class="btn-sec">Explore Ecosystem</button>
+        </div>
+      </div>
+      <div class="hero-metrics">
+        <div class="hm"><div class="hm-val">48+</div><div class="hm-lbl">Publications</div></div>
+        <div class="hm"><div class="hm-val">0.3ms</div><div class="hm-lbl">Neural Latency</div></div>
+        <div class="hm"><div class="hm-val">99.1%</div><div class="hm-lbl">Accuracy</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</section>
+
+<section id="standard" class="bd">
+  
+  <canvas id="std-brain-canvas"></canvas>
+  <div class="std-overlay"></div>
+
+  <div class="std-content">
+    <div class="std-left">
+      <div class="ey">A New Standard</div>
+      <h2 class="d">A new standard in<br><span class="em">human intelligence.</span></h2>
+      <p class="blg" style="margin-top:1.5rem;">BYNX develops adaptive AI systems designed to explore energetic balance, behavioral patterns, bio-signal interaction, cognitive rhythm, and human optimization through evolving intelligent technologies.<br><br>The platform combines real-time analysis, wellness interpretation, adaptive learning systems, and biometric pattern recognition to help users better understand focus, recovery, stress response, energetic balance, and personal performance flow.</p>
+      <div class="pillars">
+        <div class="pil"><div class="pn">01</div><div class="pt">Biofield Signals</div><div class="pb">Adaptive systems interpreting energetic patterns, behavioral rhythm, and real-time bio-signal interaction through evolving AI architecture.</div></div>
+        <div class="pil"><div class="pn">02</div><div class="pt">Real-Time Mapping</div><div class="pb">Dynamic visualization systems designed to analyze adaptive response patterns, cognitive flow, and wellness interaction signals.</div></div>
+        <div class="pil"><div class="pn">03</div><div class="pt">Adaptive Intelligence</div><div class="pb">AI systems continuously improving through personalized interaction patterns, recovery rhythm analysis, and energetic feedback interpretation.</div></div>
+        <div class="pil"><div class="pn">04</div><div class="pt">Experimental Ecosystem</div><div class="pb">A next-generation AI wellness platform focused on adaptive intelligence, human optimization, energetic balance, and evolving personal insight.</div></div>
+      </div>
+    </div>
+    
+    <div></div>
+  </div>
+</section>
+
+<section id="how" class="pad bd">
+  <div style="text-align:center;margin-bottom:4rem;"><div class="ey cx">How It Works</div><h2 class="d" style="text-align:center;">Four layers of <span class="em">adaptive intelligence.</span></h2></div>
+  <div class="steps">
+    <div class="step"><div class="sn">01</div><div class="st">Energetic Signals</div><div class="sb">Adaptive AI interpretation systems analyzing energetic balance, behavioral rhythm, emotional flow, recovery patterns, and real-time biofield interaction dynamics.</div><div style="margin-top:1rem;"><span class="chip">Energy · Signals · Balance</span></div></div>
+    <div class="step"><div class="sn">02</div><div class="st">Adaptive Processing</div><div class="sb">Real-time adaptive intelligence continuously interpreting stress patterns, recovery flow, interaction consistency, hydration balance, and cognitive rhythm signals.</div><div style="margin-top:1rem;"><span class="chip">Adaptive · Analysis · Wellness</span></div></div>
+    <div class="step"><div class="sn">03</div><div class="st">Intelligence Engine</div><div class="sb">Machine-learning ecosystems generating personalized wellness interpretation, energetic insights, behavioral pattern recognition, and adaptive human optimization feedback.</div><div style="margin-top:1rem;"><span class="chip">AI Engine · Insight · Optimization</span></div></div>
+    <div class="step"><div class="sn">04</div><div class="st">Real-Time Feedback</div><div class="sb">Dynamic ecosystem responses designed to support energetic balance, recovery flow, relaxation state, emotional rhythm, and ongoing wellness awareness.</div><div style="margin-top:1rem;"><span class="chip">Realtime · Feedback · Ecosystem</span></div></div>
+  </div>
+</section>
+
+<section id="analysis">
+  <div class="vid-section">
+    <div class="vid-pane"><video autoplay muted loop playsinline><source src="analiz.mp4" type="video/mp4"></video><div class="vp-ov"></div><div class="vid-label">BYNX·BIOFIELD · SESSION #4821</div><div class="vid-live">Live Analysis</div></div>
+    <div class="vid-text-pane"><div class="vtp-inner">
+      <div class="ey">Real-Time Analysis</div>
+      <h2 class="d">Understanding human energy <span class="em">in real time.</span></h2>
+      <p class="blg" style="margin-top:1.25rem;">BYNX uses adaptive AI interpretation systems to analyze energetic balance, behavioral rhythm, recovery flow, stress response, skin condition patterns, hydration signals, and biofield interaction dynamics in real time.<br><br>The ecosystem generates personalized wellness insights designed to help users better understand focus, emotional state, energetic harmony, and overall human optimization.</p>
+      <div class="a-stats">
+        <div class="ast"><div class="ast-v">0.3s</div><div class="ast-l">Signal Response</div></div>
+        <div class="ast"><div class="ast-v">99.1%</div><div class="ast-l">Pattern Accuracy</div></div>
+        <div class="ast"><div class="ast-v">4.2M</div><div class="ast-l">AI Analysis Events</div></div>
+        <div class="ast"><div class="ast-v">128+</div><div class="ast-l">Biometric Indicators</div></div>
+      </div>
+      <div class="scan-bar"><div class="scan-inner"></div></div>
+      <div class="scan-lbl">LIVE BIOFIELD SCANNING · ADAPTIVE WELLNESS ANALYSIS</div>
+    </div></div>
+  </div>
+</section>
+
+<section id="dashboard" class="pad bd">
+  <div style="margin-bottom:1rem;"><div class="ey">Wellness Dashboard</div><h2 class="d">Adaptive intelligence, <span class="em">in real time.</span></h2></div>
+  <div class="db-mockup">
+    <div class="db-bar"><div class="db-dots"><div class="dbd" style="background:rgba(212,0,138,.4);"></div><div class="dbd" style="background:rgba(109,79,199,.35);"></div><div class="dbd" style="background:var(--b2);"></div></div><div class="db-title">BYNX Wellness Platform · Live Biofield Session</div><div class="db-live-lbl">Analysis Active</div></div>
+    <div class="db-body">
+      <div class="db-side"><div class="ds">Navigation</div><div class="dn on">Energy Overview</div><div class="dn">Biofield Mapping</div><div class="dn">Signal Analysis</div><div class="ds">Wellness</div><div class="dn">User Profiles</div><div class="dn">Session Reports</div><div class="dn">Insight History</div><div class="ds">System</div><div class="dn">Device Status</div><div class="dn">Sync &amp; Export</div></div>
+      <div class="db-main">
+        <div class="kpis"><div class="kpi"><div class="kv">94.7%</div><div class="kl">Energetic Balance</div><div class="kd">↑ +2.3%</div></div><div class="kpi"><div class="kv">0.3s</div><div class="kl">Signal Response</div><div class="kd">↓ Optimized</div></div><div class="kpi"><div class="kv">128+</div><div class="kl">Biofield Indicators</div><div class="kd">All active</div></div><div class="kpi"><div class="kv">4.2M</div><div class="kl">AI Analysis Events</div><div class="kd">Streaming live</div></div></div>
+        <div class="chart-box"><div class="cl-lbl">BIOFIELD ENERGY STREAM · LIVE SESSION</div>
+          <svg class="wv" viewBox="0 0 600 100" preserveAspectRatio="none">
+            <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4008a" stop-opacity=".2"/><stop offset="100%" stop-color="#d4008a" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,68 C20,58 30,36 50,42 C70,48 80,78 100,72 C120,66 130,26 150,32 C170,38 180,62 200,56 C220,50 230,16 250,22 C270,28 280,68 300,62 C320,56 330,30 350,36 C370,42 380,72 400,66 C420,60 430,20 450,26 C470,32 480,62 500,56 C520,50 530,36 550,42 C570,48 580,64 600,62 L600,100 L0,100 Z" fill="url(#wg)"/>
+            <path d="M0,68 C20,58 30,36 50,42 C70,48 80,78 100,72 C120,66 130,26 150,32 C170,38 180,62 200,56 C220,50 230,16 250,22 C270,28 280,68 300,62 C320,56 330,30 350,36 C370,42 380,72 400,66 C420,60 430,20 450,26 C470,32 480,62 500,56 C520,50 530,36 550,42 C570,48 580,64 600,62" fill="none" stroke="rgba(212,0,138,.55)" stroke-width="1"/>
+            <path d="M0,82 C30,76 60,56 90,62 C120,68 150,86 180,82 C210,78 240,48 270,52 C300,56 330,76 360,72 C390,68 420,52 450,56 C480,60 510,76 540,72 C570,68 590,74 600,72" fill="none" stroke="rgba(109,79,199,.28)" stroke-width=".5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="db-right">
+        <div class="dw"><div class="dwt">Live Wellness Feed</div><div class="ai"><div class="aid" style="background:rgba(212,0,138,.7);"></div><div class="ait">Energetic balance shift detected</div><div class="atime">0:03</div></div><div class="ai"><div class="aid" style="background:rgba(109,79,199,.6);"></div><div class="ait">Recovery rhythm improving</div><div class="atime">0:11</div></div><div class="ai"><div class="aid" style="background:rgba(255,255,255,.15);"></div><div class="ait">Stress pattern recalibrating</div><div class="atime">0:24</div></div><div class="ai"><div class="aid" style="background:rgba(212,0,138,.7);"></div><div class="ait">Biofield coherence peak identified</div><div class="atime">0:38</div></div></div>
+        <div class="dw"><div class="dwt">Signal Intensity</div><div class="sp"><div class="spb" style="height:35%"></div><div class="spb hi" style="height:72%"></div><div class="spb" style="height:50%"></div><div class="spb mid" style="height:58%"></div><div class="spb" style="height:38%"></div><div class="spb hi" style="height:88%"></div><div class="spb" style="height:44%"></div><div class="spb mid" style="height:62%"></div><div class="spb" style="height:29%"></div><div class="spb hi" style="height:77%"></div><div class="spb" style="height:48%"></div><div class="spb" style="height:40%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="body-map">
+  <div class="bvs">
+    <div class="bvid-text"><div class="bvt-inner"><div class="ey">Full-Spectrum</div><h2 class="d">Full-spectrum <span class="em">energetic mapping.</span></h2><p class="blg" style="margin-top:1.25rem;">BYNX interprets energetic balance, recovery flow, behavioral rhythm, stress patterns, hydration signals, and biofield interaction dynamics through adaptive AI analysis.<br><br>The ecosystem continuously builds a personalized understanding of the individual — helping users better understand energetic fluctuations, recovery patterns, emotional rhythm, and personal wellness flow in real time.</p><div class="bpoints"><div class="bp"><div class="bpr">Energetic Layer</div><div class="bpt">Energy Flow Analysis</div><div class="bpd">Adaptive AI systems interpret energetic circulation patterns, recovery fluctuations, and overall wellness balance through dynamic signal mapping.</div><div class="bpv">Real-time · Adaptive · Personalized</div></div><div class="bp"><div class="bpr">Recovery Layer</div><div class="bpt">Stress &amp; Recovery Interpretation</div><div class="bpd">The platform analyzes stress rhythm, emotional tension patterns, recovery response, and regenerative stability using evolving wellness intelligence.</div><div class="bpv">Recovery · Balance · Wellness</div></div><div class="bp"><div class="bpr">Biofield Layer</div><div class="bpt">Biofield Resonance Mapping</div><div class="bpd">BYNX generates adaptive energetic interpretation models designed to support focus, clarity, emotional harmony, and personalized wellness optimization.</div><div class="bpv">Resonance · Harmony · Optimization</div></div></div></div></div>
+    <div class="bvid-pane"><video autoplay muted loop playsinline><source src="body.mp4" type="video/mp4"></video><div class="bvp-ov"></div><div class="vid-label">BYNX·ENERGETIC·MAP · ACTIVE</div></div>
+  </div>
+</section>
+
+<section id="powered" class="pad bd" style="background:var(--g1);text-align:center;">
+  <div class="ey cx">Adaptive Wellness Technology</div><h2 class="d" style="text-align:center;">Powered by <span class="em">adaptive wellness intelligence.</span></h2>
+  <p class="blg" style="margin:1rem auto 0;max-width:520px;text-align:center;">The BYNX ecosystem is designed to interpret energetic balance, recovery rhythm, behavioral flow, wellness patterns, and biofield interaction through evolving AI systems built for personalized human optimization.</p>
+  <div class="tg">
+    <div class="tc"><div class="tci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><div class="tct">Energetic Interpretation Engine</div><div class="tcb">Adaptive AI systems continuously interpret energetic flow, recovery fluctuations, emotional rhythm, and behavioral resonance patterns in real time.</div><div class="tcs">Adaptive · Personalized · Real-Time</div></div>
+    <div class="tc"><div class="tci"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="tct">Resonance Analysis System</div><div class="tcb">Dynamic wellness intelligence designed to detect energetic shifts, stress accumulation, recovery instability, and cognitive fatigue through evolving interaction patterns.</div><div class="tcs">Energy · Recovery · Harmony</div></div>
+    <div class="tc"><div class="tci"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="tct">Biofield Response Model</div><div class="tcb">Personalized energetic interpretation models adapt to each individual over time — creating continuously evolving wellness insight systems unique to the user.</div><div class="tcs">Biofield · Adaptive · Personalized</div></div>
+    <div class="tc"><div class="tci"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="tct">Wellness Knowledge Layer</div><div class="tcb">The ecosystem integrates adaptive wellness intelligence, energetic mapping, behavioral rhythm interpretation, and evolving optimization models into a unified AI experience.</div><div class="tcs">Wellness · Insight · Optimization</div></div>
+    <div class="tc"><div class="tci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div class="tct">Live Adaptive Network</div><div class="tcb">BYNX continuously evolves through interaction analysis, recovery interpretation, energetic response patterns, and personalized wellness feedback systems.</div><div class="tcs">Live · Dynamic · Evolving</div></div>
+    <div class="tc"><div class="tci"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="tct">Personal Insight Interface</div><div class="tcb">The platform transforms energetic analysis and wellness interpretation into clear personalized insights designed to support focus, balance, emotional clarity, and recovery awareness.</div><div class="tcs">Clarity · Balance · Focus</div></div>
+  </div>
+</section>
+
+<section id="foundation" class="pad bd" style="background:var(--void);">
+  <div class="ey">Research Collective</div><h2 class="d">Founding the next generation of <span class="em">adaptive wellness intelligence.</span></h2>
+  <div class="fg">
+    <div class="fc"><div class="fcn">Adaptive Wellness</div><div class="fct">Energetic balance as a design principle</div><div class="fcb">The BYNX ecosystem is built around energetic awareness, emotional rhythm, and recovery flow — not conventional performance metrics. Wellness by design.</div><div style="margin-top:1rem;"><span class="chip">Wellness · Awareness · Balance</span></div></div>
+    <div class="fc"><div class="fcn">Personalized Intelligence</div><div class="fct">No two human systems are the same</div><div class="fcb">Rather than building for population averages, BYNX focuses on adaptive personalization — continuously evolving to understand each individual's unique energetic patterns and wellness rhythm.</div><div style="margin-top:1rem;"><span class="chip">Personalized · Adaptive · Evolving</span></div></div>
+    <div class="fc"><div class="fcn">Human-Centered</div><div class="fct">Wellness data stays personal</div><div class="fcb">Energetic and behavioral signals are the most intimate expressions of the human system. BYNX processes data on-device by default — your wellness profile stays yours.</div><div style="margin-top:1rem;"><span class="chip">Private · On-Device · Yours</span></div></div>
+    <div class="fc"><div class="fcn">Collective Vision</div><div class="fct">A new paradigm for human optimization</div><div class="fcb">BYNX unites adaptive wellness systems, behavioral interpretation, energetic balance analysis, and human optimization design into one evolving ecosystem built for the future.</div><div style="margin-top:1rem;"><span class="chip">Ecosystem · Community · Future</span></div></div>
+  </div>
+</section>
+
+
+<section id="roadmap" class="pad bd" style="background:var(--g1);">
+  <div class="ey">Roadmap</div><h2 class="d">The path <span class="em">forward.</span></h2>
+  <div class="rmg">
+    <div class="rmt">
+      <div class="rmi"><div class="rmd"></div><div class="rmq">Q1 2024 · Complete</div><div class="rmt2">Adaptive Signal Foundation</div><div class="rmde">The first BYNX adaptive wellness experiments were initiated — focused on energetic interpretation, behavioral rhythm analysis, and personalized balance mapping.</div><div class="rmtags"><span class="rmtag done">Experimental</span><span class="rmtag done">Foundation</span><span class="rmtag done">Early Signals</span></div></div>
+      <div class="rmi"><div class="rmd"></div><div class="rmq">Q3 2024 · Complete</div><div class="rmt2">Private Wellness Beta</div><div class="rmde">Private BYNX beta sessions conducted with 12 selected wellness participants and ecosystem collaborators across multiple regions. Over 4,200 adaptive wellness sessions contributed to the evolution of the BYNX adaptive intelligence ecosystem.</div><div class="rmtags"><span class="rmtag done">Private Beta</span><span class="rmtag done">Wellness Sessions</span><span class="rmtag done">Ecosystem Testing</span></div></div>
+      <div class="rmi"><div class="rmd"></div><div class="rmq">Q1 2025 · In Progress</div><div class="rmt2">Energetic Intelligence Engine</div><div class="rmde">Launch of the first adaptive interpretation engine focused on energetic balance, emotional rhythm awareness, recovery flow, and personalized human optimization pathways.</div><div class="rmtags"><span class="rmtag">Adaptive Intelligence</span><span class="rmtag">Human Optimization</span><span class="rmtag">Wellness Mapping</span></div></div>
+    </div>
+    <div class="rmt">
+      <div class="rmi"><div class="rmd fut"></div><div class="rmq">Q3 2025 · Upcoming</div><div class="rmt2">BYNX Ecosystem Expansion</div><div class="rmde">Expansion of the BYNX adaptive wellness ecosystem with deeper personalized insights, behavioral interpretation layers, and evolving energetic awareness systems.</div><div class="rmtags"><span class="rmtag">Expansion</span><span class="rmtag">Adaptive Systems</span><span class="rmtag">Personal Insights</span></div></div>
+      <div class="rmi"><div class="rmd fut"></div><div class="rmq">Q2 2026 · Planned</div><div class="rmt2">Global Wellness Platform</div><div class="rmde">Unified adaptive wellness platform designed around emotional awareness, energetic harmony, focus recovery, relaxation flow, and human optimization experiences.</div><div class="rmtags"><span class="rmtag">Global Platform</span><span class="rmtag">Wellness Intelligence</span><span class="rmtag">Human Balance</span></div></div>
+      <div class="rmi"><div class="rmd fut"></div><div class="rmq">2026+ · Vision</div><div class="rmt2">Human Potential Vision</div><div class="rmde">Building the next generation of adaptive wellness intelligence designed to support awareness, harmony, energetic balance, and long-term human potential evolution.</div><div class="rmtags"><span class="rmtag">Vision</span><span class="rmtag">Human Potential</span><span class="rmtag">Evolution</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="token" class="pad bd" style="padding-bottom:4rem;">
+  <div class="ey">Tokenomics</div>
+  <h2 class="d">BYNX Token <span class="em">distribution.</span></h2>
+  <p class="blg" style="margin-top:0.75rem;max-width:560px;color:rgba(185,198,232,0.92);font-size:14px;">Designed to support long-term ecosystem growth, adaptive intelligence research, community expansion, and sustainable platform evolution.</p>
+  <div style="margin-top:1.5rem;display:inline-flex;align-items:center;gap:1rem;background:rgba(212,0,138,0.07);border:1px solid rgba(212,0,138,0.35);border-radius:6px;padding:0.85rem 1.4rem;">
+    <div style="width:8px;height:8px;border-radius:50%;background:#d4008a;box-shadow:0 0 10px rgba(212,0,138,0.8);flex-shrink:0;"></div>
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(212,0,138,0.75);margin-bottom:4px;">Contract Address · BEP-20 · BNB Smart Chain</div>
+      <a href="https://bscscan.com/token/0xDC962F8b7669aC9Ed046332D4347060e932810F0" target="_blank" rel="noopener noreferrer" style="font-family:'DM Mono',monospace;font-size:13px;color:#ffffff;text-decoration:none;letter-spacing:0.04em;">0xDC962F8b7669aC9Ed046332D4347060e932810F0 <span style="color:rgba(212,0,138,0.9);">↗ Verify on BscScan</span></a>
+    </div>
+  </div>
+  <div class="tok-wrap">
+    <div class="tok-chart-col">
+      <div class="tok-chart-wrap">
+        <canvas id="tok-canvas"></canvas>
+        <div class="tok-center-label">
+          <div class="tcv">BYNX</div>
+          <div class="tcl">100,000,000<br>Tokens</div>
+        </div>
+      </div>
+      <div class="tok-stats">
+        <div class="ts-cell"><div class="ts-label">Symbol</div><div class="ts-val">BYNX</div></div>
+        <div class="ts-cell"><div class="ts-label">Network</div><div class="ts-val">BNB Smart Chain</div></div>
+        <div class="ts-cell"><div class="ts-label">Vesting</div><div class="ts-val">36mo</div></div>
+        <div class="ts-cell"><div class="ts-label">Supply</div><div class="ts-val">100M</div></div>
+      </div>
+    </div>
+    <div class="tok-table-col">
+      <div class="tok-table-header"><div class="tok-th">Category</div><div class="tok-th">Alloc.</div></div>
+      <div class="tok-row"><div class="tok-row-left"><div class="tok-dot" style="background:#2a80e8;box-shadow:0 0 8px rgba(42,128,232,0.55);"></div><div class="tok-label">Community / Airdrop</div></div><div class="tok-pct" style="color:#82caff;text-shadow:0 0 20px rgba(60,150,255,0.60);">40%</div></div>
+      <div class="tok-row"><div class="tok-row-left"><div class="tok-dot" style="background:#3a60d0;box-shadow:0 0 7px rgba(58,96,208,0.50);"></div><div class="tok-label">Liquidity</div></div><div class="tok-pct" style="color:#a0ccff;text-shadow:0 0 18px rgba(80,140,255,0.55);">25%</div></div>
+      <div class="tok-row"><div class="tok-row-left"><div class="tok-dot" style="background:#6a44c8;box-shadow:0 0 7px rgba(106,68,200,0.48);"></div><div class="tok-label">Team</div></div><div class="tok-pct" style="color:#cc9aff;text-shadow:0 0 16px rgba(120,80,220,0.52);">20%</div></div>
+      <div class="tok-row"><div class="tok-row-left"><div class="tok-dot" style="background:#3aacb8;box-shadow:0 0 6px rgba(58,172,184,0.45);"></div><div class="tok-label">Marketing</div></div><div class="tok-pct" style="color:#70e8f4;text-shadow:0 0 14px rgba(60,180,200,0.55);">10%</div></div>
+      <div class="tok-row"><div class="tok-row-left"><div class="tok-dot" style="background:#4a5a90;"></div><div class="tok-label">Reserve</div></div><div class="tok-pct" style="color:rgba(195,210,250,0.95);">5%</div></div>
+    </div>
+    <div class="tok-desc-col">
+      <div class="tok-desc-row"><div class="tok-desc-name">Community / Airdrop</div><div class="tok-desc-text">Ecosystem growth, community participation, wellness initiatives, airdrop programs, and platform adoption rewards.</div></div>
+      <div class="tok-desc-row"><div class="tok-desc-name">Liquidity</div><div class="tok-desc-text">Exchange liquidity provisions, market stability support, trading pair depth, and long-term liquidity infrastructure.</div></div>
+      <div class="tok-desc-row"><div class="tok-desc-name">Team</div><div class="tok-desc-text">Founding contributors, core team incentives, strategic advisors, and long-term development alignment rewards.</div></div>
+      <div class="tok-desc-row"><div class="tok-desc-name">Marketing</div><div class="tok-desc-text">Ecosystem awareness, brand building, partnership development, and adaptive wellness platform growth campaigns.</div></div>
+      <div class="tok-desc-row"><div class="tok-desc-name">Reserve</div><div class="tok-desc-text">Strategic reserve for future expansion, contingency planning, ecosystem stability, and long-term platform resilience.</div></div>
+    </div>
+  </div>
+  <div class="tok-trust">
+    <div class="tok-trust-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+    <div class="tok-trust-divider"></div>
+    <div class="tok-trust-text"><div class="tok-trust-title">Adaptive. Balanced. Built for Long-Term Evolution.</div><div class="tok-trust-desc">BYNX is structured to support sustainable ecosystem growth, adaptive intelligence research, and long-term platform stability.</div></div>
+    <div class="tok-trust-badge">Ecosystem Trust</div>
+  </div>
+</section>
+
+<!-- COMMUNITY MINING -->
+<section class="pad bd" style="background:rgba(7,6,14,0.98);padding:3rem 4rem;">
+  <div class="ey">Community Mining</div>
+  <h2 class="d">Earn BYNX <span class="em">for free.</span></h2>
+  <p class="blg" style="margin-top:0.75rem;max-width:560px;color:rgba(185,198,232,0.92);font-size:14px;">Join the BYNX Telegram Mining Bot and earn daily rewards. No purchase required. Your earned balance becomes your airdrop allocation when the token launches.</p>
+  <div style="display:flex;gap:1.5rem;margin-top:2rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;background:rgba(212,0,138,0.06);border:1px solid rgba(212,0,138,0.25);border-radius:8px;padding:1.5rem;text-align:center;">
+      <div style="font-size:36px;font-weight:900;color:#ffffff;font-family:'Instrument Sans',sans-serif;">+30</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(212,0,138,0.85);margin:0.4rem 0;">BYNX</div>
+      <div style="font-size:13px;color:rgba(185,198,232,0.80);">Registration Bonus</div>
+      <div style="font-size:11px;color:rgba(140,135,158,0.70);margin-top:0.3rem;">One-time reward</div>
+    </div>
+    <div style="flex:1;min-width:200px;background:rgba(109,79,199,0.08);border:1px solid rgba(109,79,199,0.28);border-radius:8px;padding:1.5rem;text-align:center;">
+      <div style="font-size:36px;font-weight:900;color:#ffffff;font-family:'Instrument Sans',sans-serif;">+10</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(109,79,199,0.95);margin:0.4rem 0;">BYNX</div>
+      <div style="font-size:13px;color:rgba(185,198,232,0.80);">Daily Mining</div>
+      <div style="font-size:11px;color:rgba(140,135,158,0.70);margin-top:0.3rem;">Every 24 hours</div>
+    </div>
+    <div style="flex:1;min-width:200px;background:rgba(58,172,184,0.06);border:1px solid rgba(58,172,184,0.25);border-radius:8px;padding:1.5rem;text-align:center;">
+      <div style="font-size:36px;font-weight:900;color:#ffffff;font-family:'Instrument Sans',sans-serif;">+5</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(58,172,184,0.90);margin:0.4rem 0;">BYNX</div>
+      <div style="font-size:13px;color:rgba(185,198,232,0.80);">Invite a Friend</div>
+      <div style="font-size:11px;color:rgba(140,135,158,0.70);margin-top:0.3rem;">Per referral, unlimited</div>
+    </div>
+  </div>
+  <div style="margin-top:2rem;padding:1.2rem 1.6rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <div style="font-size:13px;color:rgba(185,198,232,0.90);margin-bottom:0.3rem;">⚡ Your BYNX balance = your airdrop allocation. Start mining now.</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(140,135,158,0.65);letter-spacing:0.08em;">No wallet needed until airdrop · Free to join · Telegram only</div>
+    </div>
+    <a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener noreferrer" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;padding:13px 24px;border-radius:4px;cursor:pointer;font-weight:600;background:rgba(212,0,138,0.12);color:rgba(232,16,156,0.95);border:1px solid rgba(212,0,138,0.40);text-decoration:none;white-space:nowrap;">Start Mining →</a>
+  </div>
+</section>
+
+<section id="access" class="bd" style="background:var(--void);padding:2rem 4rem 3rem;">
+  <div style="margin-bottom:1rem;">
+    <div class="ey" style="margin-bottom:0.6rem;">Access Levels</div>
+    <h2 class="d" style="font-size:46px;line-height:1.02;letter-spacing:-0.01em;">
+      Choose your <span class="em">access level.</span>
+    </h2>
+  </div>
+
+  <div style="display:flex;flex-direction:row;flex-wrap:nowrap;gap:1.75rem;align-items:flex-start;width:100%;box-sizing:border-box;">
+
+    
+    <div style="flex:1;min-width:0;background:rgba(22,14,48,0.98);border:1px solid rgba(255,255,255,0.28);border-radius:8px;padding:1.6rem 1.75rem;box-sizing:border-box;box-shadow:0 12px 60px rgba(0,0,0,0.70),inset 0 0 50px rgba(100,50,180,0.10);">
+      <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(215,205,250,0.85);margin-bottom:.35rem;">Basic</div>
+      <div style="font-family:var(--sans);font-size:48px;font-weight:900;line-height:1;color:#fff;letter-spacing:-0.02em;margin-bottom:.3rem;">
+        <span style="font-size:26px;font-weight:700;vertical-align:top;margin-top:8px;display:inline-block;">$</span>30
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(200,185,235,0.80);margin-bottom:.9rem;">One-time entry</div>
+      <div style="height:1px;background:rgba(255,255,255,0.14);margin-bottom:.9rem;"></div>
+      <ul style="list-style:none;padding:0;margin:0 0 1.1rem;display:flex;flex-direction:column;gap:.38rem;">
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>Entry to research program</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>Daily AI scan access</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>+400 BYNX tokens</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>Community access</li>
+        <li style="font-size:12.5px;color:rgba(170,158,200,0.48);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(150,135,180,0.38);font-size:10px;top:2px;">—</span>Priority updates</li>
+        <li style="font-size:12.5px;color:rgba(170,158,200,0.48);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(150,135,180,0.38);font-size:10px;top:2px;">—</span>Full dashboard access</li>
+      </ul>
+      <a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener" style="display:block;"><button style="width:100%;display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:13px;border-radius:4px;cursor:pointer;font-weight:600;background:transparent;color:rgba(225,215,250,0.85);border:1px solid rgba(255,255,255,0.25);">Join Basic →</button></a>
+    </div>
+
+    
+    <div style="flex:1;min-width:0;background:rgba(38,14,68,0.98);border:1px solid rgba(232,16,156,0.55);border-radius:8px;padding:1.6rem 1.75rem;box-sizing:border-box;box-shadow:0 0 90px rgba(212,0,138,0.18),0 12px 60px rgba(0,0,0,0.70),inset 0 0 60px rgba(160,0,120,0.12);position:relative;">
+      <div style="position:absolute;top:1.1rem;right:1.1rem;font-family:var(--mono);font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;padding:3px 9px;border-radius:2px;background:rgba(212,0,138,0.20);color:rgba(245,120,210,0.95);border:0.5px solid rgba(212,0,138,0.45);">Popular</div>
+      <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(230,190,255,0.85);margin-bottom:.35rem;">Pro</div>
+      <div style="font-family:var(--sans);font-size:48px;font-weight:900;line-height:1;color:#fff;letter-spacing:-0.02em;margin-bottom:.3rem;text-shadow:0 0 40px rgba(212,0,138,0.50);">
+        <span style="font-size:26px;font-weight:700;vertical-align:top;margin-top:8px;display:inline-block;">$</span>80
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(200,185,235,0.80);margin-bottom:.9rem;">Priority access</div>
+      <div style="height:1px;background:rgba(212,0,138,0.28);margin-bottom:.9rem;"></div>
+      <ul style="list-style:none;padding:0;margin:0 0 1.1rem;display:flex;flex-direction:column;gap:.38rem;">
+        <li style="font-size:12.5px;color:rgba(242,230,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.90);font-size:10px;top:2px;">→</span>Priority updates &amp; early features</li>
+        <li style="font-size:12.5px;color:rgba(242,230,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.90);font-size:10px;top:2px;">→</span>Full dashboard access</li>
+        <li style="font-size:12.5px;color:rgba(242,230,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.90);font-size:10px;top:2px;">→</span>+2,500 BYNX tokens</li>
+        <li style="font-size:12.5px;color:rgba(242,230,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.90);font-size:10px;top:2px;">→</span>Personalized protocol reports</li>
+        <li style="font-size:12.5px;color:rgba(242,230,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.90);font-size:10px;top:2px;">→</span>Extended platform access</li>
+        <li style="font-size:12.5px;color:rgba(170,158,200,0.48);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(150,135,180,0.38);font-size:10px;top:2px;">—</span>1:1 onboarding call</li>
+      </ul>
+      <a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener" style="display:block;"><button style="width:100%;display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:13px;border-radius:4px;cursor:pointer;font-weight:600;background:#e8109c;color:#fff;border:none;box-shadow:0 0 28px rgba(212,0,138,0.55);">Join Pro →</button></a>
+    </div>
+
+    
+    <div style="flex:1;min-width:0;background:rgba(22,14,48,0.98);border:1px solid rgba(255,255,255,0.28);border-radius:8px;padding:1.6rem 1.75rem;box-sizing:border-box;box-shadow:0 12px 60px rgba(0,0,0,0.70),inset 0 0 50px rgba(100,50,180,0.10);">
+      <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(215,205,250,0.85);margin-bottom:.35rem;">Premium</div>
+      <div style="font-family:var(--sans);font-size:48px;font-weight:900;line-height:1;color:#fff;letter-spacing:-0.02em;margin-bottom:.3rem;">
+        <span style="font-size:26px;font-weight:700;vertical-align:top;margin-top:8px;display:inline-block;">$</span>200
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(200,185,235,0.80);margin-bottom:.9rem;">Full ecosystem</div>
+      <div style="height:1px;background:rgba(255,255,255,0.14);margin-bottom:.9rem;"></div>
+      <ul style="list-style:none;padding:0;margin:0 0 1.1rem;display:flex;flex-direction:column;gap:.38rem;">
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>Early priority for all future testing</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>Direct input on product roadmap</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>+7,000 BYNX tokens</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>Full access + Founder status</li>
+        <li style="font-size:12.5px;color:rgba(242,238,255,1.0);padding-left:1.2rem;position:relative;line-height:1.35;"><span style="position:absolute;left:0;color:rgba(232,16,156,0.85);font-size:10px;top:2px;">→</span>1:1 onboarding call</li>
+      </ul>
+      <a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener" style="display:block;"><button style="width:100%;display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:13px;border-radius:4px;cursor:pointer;font-weight:600;background:transparent;color:rgba(225,215,250,0.85);border:1px solid rgba(255,255,255,0.25);">Join Premium →</button></a>
+    </div>
+
+  </div>
+</section>
+
+<section id="ecosystem" class="bd" style="background:var(--void);padding:5rem 3rem 5.5rem;position:relative;overflow:hidden;">
+
+  
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 20% 50%,rgba(212,0,138,0.04) 0%,transparent 65%),radial-gradient(ellipse 50% 60% at 80% 50%,rgba(109,79,199,0.03) 0%,transparent 65%);"></div>
+
+  <div style="position:relative;z-index:1;">
+
+    
+    <div style="margin-bottom:3.5rem;">
+      <div class="ey">Ecosystem</div>
+      <h2 style="font-family:var(--sans);font-size:62px;font-weight:900;line-height:1.0;letter-spacing:-0.02em;color:#ffffff;margin:0.5rem 0 0;text-transform:uppercase;text-shadow:0 0 40px rgba(212,0,138,0.30),0 2px 8px rgba(0,0,0,0.60);">Building the<br>Ecosystem</h2>
+    </div>
+
+    
+    <div style="position:relative;padding:2.5rem 0 3rem;">
+
+      
+      <div style="position:absolute;top:2.5rem;left:0;right:0;height:1px;background:linear-gradient(90deg,rgba(232,16,156,0.95) 0%,rgba(212,0,138,0.65) 25%,rgba(150,90,230,0.55) 50%,rgba(109,79,199,0.40) 75%,rgba(109,79,199,0.25) 100%);box-shadow:0 0 8px rgba(212,0,138,0.25);"></div>
+
+      
+      <div style="display:flex;flex-direction:row;align-items:flex-start;justify-content:space-between;gap:0;position:relative;">
+
+        
+        <div style="flex:1;min-width:0;padding-right:1.5rem;position:relative;">
+          
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--f2);box-shadow:0 0 20px rgba(232,16,156,1.0),0 0 42px rgba(232,16,156,0.65);margin-bottom:1.25rem;position:relative;z-index:2;"></div>
+          <div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(232,16,156,0.92);margin-bottom:.45rem;">Phase I</div>
+          <div style="font-family:var(--sans);font-size:13.5px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.02em;line-height:1.3;text-shadow:0 0 20px rgba(212,0,138,0.25);">Token Launch<br>&amp; Brand</div>
+          <div style="font-size:11.5px;color:rgba(205,196,236,0.92);line-height:1.55;margin-top:.55rem;">BYNX token deployment, brand identity, community foundation, and ecosystem launch.</div>
+          <div style="margin-top:.8rem;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(232,16,156,0.70);background:rgba(212,0,138,0.08);border:0.5px solid rgba(212,0,138,0.22);padding:3px 9px;border-radius:2px;">Complete</div>
+        </div>
+
+        
+        <div style="flex:1;min-width:0;padding-right:1.5rem;position:relative;">
+          <div style="width:9px;height:9px;border-radius:50%;background:var(--void);border:2px solid rgba(232,16,156,0.92);box-shadow:0 0 14px rgba(212,0,138,0.60);margin-bottom:1.25rem;position:relative;z-index:2;"></div>
+          <div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(232,16,156,0.80);margin-bottom:.45rem;">Phase II</div>
+          <div style="font-family:var(--sans);font-size:13.5px;font-weight:700;color:rgba(248,244,255,0.98);text-transform:uppercase;letter-spacing:0.02em;line-height:1.3;">Telegram Bot<br>&amp; 200-Person Pilot</div>
+          <div style="font-size:11.5px;color:rgba(205,196,236,0.92);line-height:1.55;margin-top:.55rem;">Adaptive AI bot launch, 200-participant wellness pilot, early signal collection.</div>
+          <div style="margin-top:.8rem;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(180,160,220,0.60);background:rgba(109,79,199,0.07);border:0.5px solid rgba(109,79,199,0.20);padding:3px 9px;border-radius:2px;">In Progress</div>
+        </div>
+
+        
+        <div style="flex:1;min-width:0;padding-right:1.5rem;position:relative;">
+          <div style="width:9px;height:9px;border-radius:50%;background:var(--void);border:2px solid rgba(155,100,240,0.88);box-shadow:0 0 12px rgba(130,80,230,0.50);margin-bottom:1.25rem;position:relative;z-index:2;"></div>
+          <div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(175,155,235,0.78);margin-bottom:.45rem;">Phase III</div>
+          <div style="font-family:var(--sans);font-size:13.5px;font-weight:700;color:rgba(238,232,255,0.95);text-transform:uppercase;letter-spacing:0.02em;line-height:1.3;">AI Model Refinement<br>&amp; Airdrop</div>
+          <div style="font-size:11.5px;color:rgba(200,190,232,0.90);line-height:1.55;margin-top:.55rem;">Intelligence engine refinement, community airdrop distribution, adaptive systems update.</div>
+          <div style="margin-top:.8rem;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(140,120,190,0.50);background:rgba(80,60,140,0.06);border:0.5px solid rgba(109,79,199,0.14);padding:3px 9px;border-radius:2px;">Planned</div>
+        </div>
+
+        
+        <div style="flex:1;min-width:0;padding-right:1.5rem;position:relative;">
+          <div style="width:9px;height:9px;border-radius:50%;background:var(--void);border:2px solid rgba(135,92,225,0.75);margin-bottom:1.25rem;position:relative;z-index:2;"></div>
+          <div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(160,142,215,0.70);margin-bottom:.45rem;">Phase IV</div>
+          <div style="font-family:var(--sans);font-size:13.5px;font-weight:700;color:rgba(228,220,255,0.88);text-transform:uppercase;letter-spacing:0.02em;line-height:1.3;">Full Platform<br>Beta</div>
+          <div style="font-size:11.5px;color:rgba(190,178,225,0.86);line-height:1.55;margin-top:.55rem;">Full BYNX wellness platform public beta, expanded partner integrations, ecosystem growth.</div>
+          <div style="margin-top:.8rem;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(120,105,170,0.45);background:rgba(60,45,110,0.05);border:0.5px solid rgba(109,79,199,0.10);padding:3px 9px;border-radius:2px;">Planned</div>
+        </div>
+
+        
+        <div style="flex:1;min-width:0;position:relative;">
+          <div style="width:9px;height:9px;border-radius:50%;background:var(--void);border:2px solid rgba(125,90,215,0.65);margin-bottom:1.25rem;position:relative;z-index:2;"></div>
+          <div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(148,132,200,0.62);margin-bottom:.45rem;">Phase V</div>
+          <div style="font-family:var(--sans);font-size:13.5px;font-weight:700;color:rgba(218,210,250,0.80);text-transform:uppercase;letter-spacing:0.02em;line-height:1.3;">DEX Listing<br>&amp; Scale</div>
+          <div style="font-size:11.5px;color:rgba(182,170,218,0.82);line-height:1.55;margin-top:.55rem;">Decentralized exchange listing, global ecosystem scaling, long-term platform evolution.</div>
+          <div style="margin-top:.8rem;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(110,95,155,0.40);background:rgba(50,38,90,0.04);border:0.5px solid rgba(109,79,199,0.08);padding:3px 9px;border-radius:2px;">Vision</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="quote-section"><p class="fq">"The next breakthrough in human wellness will not come from technology alone — it will come from those who understand the <span class="em">rhythm of the human system.</span>"</p><div class="qa">— BYNX Core Team</div></section>
+
+<section id="cta-section"><div class="ctac"><div class="ey cx">Join the Community</div><h2 class="d" style="text-align:center;">The future of <span class="em">cognition is open.</span></h2><p class="blg" style="margin:1rem auto 0;max-width:480px;text-align:center;">Join 4,200+ wellness explorers, biohackers, and adaptive AI enthusiasts building the next era of human optimization.</p><div class="ctabtns"><a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener"><button class="btn-p">Request Research Access</button></a><a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener"><button class="btn-g">Join the Waitlist</button></a></div></div></section>
+
+<section id="vision-section" class="bd" style="background:var(--void);text-align:center;padding:6rem 4rem 5.5rem;position:relative;overflow:hidden;border-bottom:0.5px solid rgba(255,255,255,0.05);">
+
+  
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 65% 70% at 50% 42%,rgba(212,0,138,0.06) 0%,transparent 68%);"></div>
+
+  <div style="position:relative;z-index:1;max-width:820px;margin:0 auto;">
+
+    
+    <blockquote style="margin:0;font-family:var(--sans);font-size:46px;font-weight:900;line-height:1.12;letter-spacing:-0.01em;text-transform:uppercase;color:#ffffff;">
+      &ldquo;The next leap in human performance will come from
+      <span style="color:var(--f2);text-shadow:0 0 32px rgba(212,0,138,0.55);">understanding yourself</span>
+      more precisely than ever before.&rdquo;
+    </blockquote>
+
+    
+    <div style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(180,168,210,0.52);margin-top:2.25rem;">— The BYNX Vision</div>
+
+    
+    <div style="height:0.5px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent);margin:3.5rem auto;max-width:680px;"></div>
+
+    
+    <div style="display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:0;">
+
+      <div style="flex:1;text-align:center;padding:0 2rem;border-right:1px solid rgba(255,255,255,0.08);">
+        <div style="font-family:var(--sans);font-size:52px;font-weight:900;line-height:1;color:var(--f2);text-shadow:0 0 28px rgba(212,0,138,0.50);letter-spacing:-0.02em;">200</div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(175,162,210,0.52);margin-top:0.6rem;">Pilot Spots</div>
+      </div>
+
+      <div style="flex:1;text-align:center;padding:0 2rem;border-right:1px solid rgba(255,255,255,0.08);">
+        <div style="font-family:var(--sans);font-size:52px;font-weight:900;line-height:1;color:var(--f2);text-shadow:0 0 28px rgba(212,0,138,0.50);letter-spacing:-0.02em;">100M</div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(175,162,210,0.52);margin-top:0.6rem;">Total Supply</div>
+      </div>
+
+      <div style="flex:1;text-align:center;padding:0 2rem;border-right:1px solid rgba(255,255,255,0.08);">
+        <div style="font-family:var(--sans);font-size:52px;font-weight:900;line-height:1;color:var(--f2);text-shadow:0 0 28px rgba(212,0,138,0.50);letter-spacing:-0.02em;">2025</div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(175,162,210,0.52);margin-top:0.6rem;">Founded</div>
+      </div>
+
+      <div style="flex:1;text-align:center;padding:0 2rem;">
+        <div style="font-family:var(--sans);font-size:44px;font-weight:900;line-height:1;color:var(--f2);text-shadow:0 0 28px rgba(212,0,138,0.50);letter-spacing:-0.03em;white-space:nowrap;">AI-First</div>
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(175,162,210,0.52);margin-top:0.6rem;">Architecture</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="community" style="background:#000000;text-align:center;padding:7rem 4rem 6rem;position:relative;overflow:hidden;border-top:0.5px solid rgba(255,255,255,0.05);">
+
+  
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 65% at 50% 50%,rgba(212,0,138,0.07) 0%,transparent 68%);"></div>
+
+  <div style="position:relative;z-index:1;">
+
+    
+    <div style="font-family:var(--sans);font-weight:900;text-transform:uppercase;line-height:0.95;letter-spacing:-0.02em;margin:0 auto;">
+      <div style="font-size:clamp(72px,11vw,148px);color:#ffffff;">Join the</div>
+      <div style="font-size:clamp(72px,11vw,148px);color:var(--f2);text-shadow:0 0 60px rgba(212,0,138,0.55),0 0 120px rgba(212,0,138,0.20);">BYNX</div>
+      <div style="font-size:clamp(72px,11vw,148px);color:#ffffff;">Community</div>
+    </div>
+
+    
+    <p style="font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:rgba(175,165,210,0.62);line-height:1.75;max-width:480px;margin:2.5rem auto 0;">
+      Early experimental access. 200 participants shaping the future<br>of AI-assisted human optimization. Be part of what we&rsquo;re building.
+    </p>
+
+    
+    <div style="display:flex;flex-direction:row;gap:1rem;justify-content:center;margin-top:2.5rem;">
+      <a href="https://t.me/bynx_access_bot" target="_blank" rel="noopener"><button style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:15px 36px;background:var(--f2);color:#ffffff;border:none;border-radius:3px;cursor:pointer;box-shadow:0 0 32px rgba(212,0,138,0.55),0 0 80px rgba(212,0,138,0.18);transition:all .3s;">Join Telegram →</button></a>
+      <button style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;padding:15px 36px;background:transparent;color:rgba(225,218,248,0.85);border:1px solid rgba(255,255,255,0.28);border-radius:3px;cursor:pointer;transition:all .3s;">Start Mining →</button>
+    </div>
+
+  </div>
+</section>
+
+<footer style="padding:2rem 4rem;border-top:0.5px solid var(--b1);background:var(--g1);">
+  
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+    <div style="display:flex;align-items:center;gap:1.75rem;">
+      <div class="logo" style="gap:13px;"><div class="lm"></div><div style="display:flex;flex-direction:column;gap:1px;"><div class="ln">BYNX</div><div class="ls">Neural Labs</div></div></div>
+      <div class="ftc">© 2025 BYNX Labs Inc. · All rights reserved · San Francisco</div>
+    </div>
+    <div class="ftl"><a href="#">Research</a><a href="#">Contact</a><a href="#">Careers</a><a href="#">Privacy</a><a href="#">GitHub</a></div>
+  </div>
+  
+  <div style="border-top:0.5px solid rgba(255,255,255,0.04);padding-top:1.25rem;">
+    <p style="font-family:var(--mono);font-size:9.5px;line-height:1.70;letter-spacing:0.04em;color:rgba(140,130,165,0.42);margin:0;max-width:900px;">
+      BYNX is a wellness research program currently in early experimental development. This technology is not a medical device and does not constitute medical advice or treatment. Individual results may vary. BYNX tokens are experimental digital assets and do not represent ownership, equity, or financial returns. All insights are experimental and should not replace professional medical advice.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ── Nav scroll ── */
+const nav=document.getElementById('mainnav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+
+/* ══════════════════════════════════════════════════════
+   PATHWAYS CANVAS
+   Neural energy network drawn ON TOP of the brain video.
+   Uses mix-blend-mode:screen so lines merge cinematically
+   with the video rather than floating over it.
+
+   Design intent:
+   - ~55 nodes positioned to match the cortical anatomy
+     visible in a standard MRI lateral view
+   - Connection lines are thin, curved, luminous
+   - Nodes glow briefly when "firing" (Poisson-like)
+   - Energy particles travel the connections
+   - Colour palette: blue-violet-fuchsia — NOT green/red
+   - NO large glowing orbs, NO geometric shapes
+══════════════════════════════════════════════════════ */
+(function(){
+  const cv=document.getElementById('pathways-canvas');
+  if(!cv)return;
+  const cx=cv.getContext('2d');
+  let W,H,nodes=[],edges=[],particles=[],t=0,raf;
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+
+  /* Colour ramps per cortical region */
+  const CLR={
+    pfc:[210,90,255],   // prefrontal — violet-blue
+    mot:[175,80,255],   // motor — cooler violet
+    par:[140,100,255],  // parietal — indigo
+    occ:[110,80,220],   // occipital — deep indigo
+    tmp:[200,80,240],   // temporal — violet-fuchsia
+    cin:[190,90,255],   // cingulate — mid violet
+  };
+
+  /* 55 cortical nodes positioned in a lateral-brain coordinate space.
+     nx/ny are 0-1 normalised; they will be mapped to screen coords
+     concentrating around the brain's visible region in the video. */
+  const DEFS=[
+    // ── Prefrontal ──
+    {nx:0.22,ny:0.24,cl:'pfc',aw:1.00},{nx:0.24,ny:0.35,cl:'pfc',aw:0.90},
+    {nx:0.22,ny:0.46,cl:'pfc',aw:0.78},{nx:0.28,ny:0.20,cl:'pfc',aw:0.85},
+    {nx:0.18,ny:0.34,cl:'pfc',aw:0.68},{nx:0.28,ny:0.52,cl:'pfc',aw:0.58},
+    // ── Motor / Premotor ──
+    {nx:0.43,ny:0.18,cl:'mot',aw:1.00},{nx:0.42,ny:0.30,cl:'mot',aw:0.94},
+    {nx:0.42,ny:0.42,cl:'mot',aw:0.88},{nx:0.44,ny:0.52,cl:'mot',aw:0.76},
+    {nx:0.40,ny:0.58,cl:'mot',aw:0.65},
+    // ── Parietal ──
+    {nx:0.60,ny:0.18,cl:'par',aw:0.88},{nx:0.61,ny:0.30,cl:'par',aw:0.92},
+    {nx:0.62,ny:0.42,cl:'par',aw:0.80},{nx:0.66,ny:0.26,cl:'par',aw:0.72},
+    {nx:0.64,ny:0.50,cl:'par',aw:0.84},{nx:0.70,ny:0.36,cl:'par',aw:0.62},
+    // ── Occipital ──
+    {nx:0.77,ny:0.32,cl:'occ',aw:0.58},{nx:0.79,ny:0.44,cl:'occ',aw:0.66},
+    {nx:0.82,ny:0.56,cl:'occ',aw:0.58},{nx:0.74,ny:0.54,cl:'occ',aw:0.52},
+    {nx:0.84,ny:0.38,cl:'occ',aw:0.58},{nx:0.80,ny:0.28,cl:'occ',aw:0.48},
+    // ── Temporal ──
+    {nx:0.31,ny:0.65,cl:'tmp',aw:0.74},{nx:0.42,ny:0.69,cl:'tmp',aw:0.84},
+    {nx:0.54,ny:0.71,cl:'tmp',aw:0.78},{nx:0.64,ny:0.67,cl:'tmp',aw:0.68},
+    {nx:0.28,ny:0.75,cl:'tmp',aw:0.58},{nx:0.52,ny:0.77,cl:'tmp',aw:0.58},
+    // ── Cingulate ──
+    {nx:0.49,ny:0.35,cl:'cin',aw:0.62},{nx:0.51,ny:0.45,cl:'cin',aw:0.74},
+    {nx:0.51,ny:0.55,cl:'cin',aw:0.68},{nx:0.53,ny:0.63,cl:'cin',aw:0.58},
+  ];
+
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+
+  function resize(){
+    W=cv.offsetWidth; H=cv.offsetHeight;
+    cv.width=W*DPR; cv.height=H*DPR;
+    cv.style.width=W+'px'; cv.style.height=H+'px';
+    cx.scale(DPR,DPR);
+    build();
+  }
+
+  /* Map normalised coords to screen — brain occupies roughly
+     the central 52-88% horizontally, 14-88% vertically of
+     a standard MRI lateral view video */
+  function mapXY(nx,ny){
+    const bx0=W*0.20, bx1=W*0.82;  // brain horizontal span
+    const by0=H*0.10, by1=H*0.90;  // brain vertical span
+    return [bx0+nx*(bx1-bx0), by0+ny*(by1-by0)];
+  }
+
+  function build(){
+    nodes=DEFS.map(d=>{
+      const [sx,sy]=mapXY(d.nx,d.ny);
+      return {
+        x:sx,y:sy,ox:sx,oy:sy,
+        nx:d.nx,ny:d.ny,cl:d.cl,aw:d.aw,
+        r:1.2+d.aw*1.0,
+        phase:Math.random()*Math.PI*2,
+        period:2.0+Math.random()*3.8,
+        fireT:-Math.random()*6,
+        vx:(Math.random()-0.5)*0.05,
+        vy:(Math.random()-0.5)*0.05,
+        spiking:false,
+      };
+    });
+
+    edges=[];
+    const N=nodes.length;
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const a=nodes[i],b=nodes[j];
+        const dx=a.ox-b.ox,dy=a.oy-b.oy,d=Math.sqrt(dx*dx+dy*dy);
+        const same=a.cl===b.cl;
+        const th=same?W*0.22:W*0.13;
+        if(d<th) edges.push({i,j,same,base:same?0.10:0.034,d});
+      }
+    }
+  }
+
+  function spawnParticle(a,b){
+    particles.push({
+      ax:a.x,ay:a.y,bx:b.x,by:b.y,
+      prog:0,spd:0.006+Math.random()*0.008,
+      cl:CLR[a.cl],alive:true
+    });
+  }
+
+  function frame(){
+    cx.clearRect(0,0,W,H);
+    t+=0.016;
+    if(!nodes.length){raf=requestAnimationFrame(frame);return;}
+
+    /* Update nodes */
+    nodes.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy;
+      n.vx+=(n.ox-n.x)*0.004; n.vy+=(n.oy-n.y)*0.004;
+      n.vx*=0.96; n.vy*=0.96;
+      n.spiking=false;
+      if(t-n.fireT>n.period){
+        if(Math.random()<0.38){
+          n.spiking=true;
+          edges.filter(e=>(e.i===nodes.indexOf(n)||e.j===nodes.indexOf(n))&&Math.random()<0.35)
+            .forEach(e=>{
+              const other=e.i===nodes.indexOf(n)?nodes[e.j]:nodes[e.i];
+              spawnParticle(n,other);
+            });
+        }
+        n.fireT=t; n.period=2.0+Math.random()*3.8;
+      }
+    });
+
+    /* Edges */
+    edges.forEach(e=>{
+      const a=nodes[e.i],b=nodes[e.j];
+      const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      const maxD=e.same?W*0.24:W*0.14;
+      if(d>maxD)return;
+      const active=a.spiking||b.spiking;
+      let alpha=e.base*(1-d/maxD)*(active?3.2:1);
+      alpha=clamp(alpha,0,0.42);
+      const cl=CLR[a.cl];
+      const mx=(a.x+b.x)/2+(dy*0.06),my=(a.y+b.y)/2-(dx*0.06);
+
+      if(active){
+        /* Glow pass for active connections */
+        cx.beginPath();cx.moveTo(a.x,a.y);cx.quadraticCurveTo(mx,my,b.x,b.y);
+        cx.strokeStyle=`rgba(${cl[0]},${cl[1]},${cl[2]},${alpha*0.28})`;
+        cx.lineWidth=e.same?3.0:2.0;cx.stroke();
+      }
+      /* Core line */
+      cx.beginPath();cx.moveTo(a.x,a.y);cx.quadraticCurveTo(mx,my,b.x,b.y);
+      cx.strokeStyle=`rgba(${cl[0]},${cl[1]},${cl[2]},${alpha})`;
+      cx.lineWidth=e.same?0.75:0.45;cx.stroke();
+    });
+
+    /* Particles */
+    particles=particles.filter(p=>p.alive);
+    particles.forEach(p=>{
+      p.prog+=p.spd;
+      if(p.prog>=1){p.alive=false;return;}
+      const x=p.ax+(p.bx-p.ax)*p.prog;
+      const y=p.ay+(p.by-p.ay)*p.prog;
+      const a=clamp((1-Math.abs(p.prog-0.5)*2)*0.85,0,1);
+      /* Glow */
+      cx.beginPath();cx.arc(x,y,3.5,0,Math.PI*2);
+      cx.fillStyle=`rgba(${p.cl[0]},${p.cl[1]},${p.cl[2]},${a*0.2})`;cx.fill();
+      /* Core */
+      cx.beginPath();cx.arc(x,y,1.2,0,Math.PI*2);
+      cx.fillStyle=`rgba(${p.cl[0]},${p.cl[1]},${p.cl[2]},${a})`;cx.fill();
+    });
+
+    /* Nodes */
+    nodes.forEach(n=>{
+      const firing=t-n.fireT<0.30;
+      const rest=0.22+0.10*Math.sin(t/n.period*Math.PI*2+n.phase)*n.aw;
+      const al=firing?0.90:rest;
+      const r=n.r*(firing?2.4:1.0);
+      const cl=CLR[n.cl];
+
+      if(firing){
+        [4.5,2.8,1.6].forEach((mr,i)=>{
+          cx.beginPath();cx.arc(n.x,n.y,r*mr,0,Math.PI*2);
+          cx.fillStyle=`rgba(${cl[0]},${cl[1]},${cl[2]},${[0.028,0.055,0.090][i]})`;cx.fill();
+        });
+      }
+      cx.beginPath();cx.arc(n.x,n.y,r,0,Math.PI*2);
+      cx.fillStyle=firing
+        ?`rgba(${cl[0]},${cl[1]},${cl[2]},${al})`
+        :`rgba(${Math.min(cl[0]+18,255)},${Math.min(cl[1]+18,255)},${Math.min(cl[2]+18,255)},${rest})`;
+      cx.fill();
+    });
+
+    /* Slow thalamo-cortical sweep */
+    const sw=((t*0.028)%1.20);
+    const swY=H*0.10+sw*(H*0.82);
+    if(swY>H*0.05&&swY<H*0.95){
+      const sg=cx.createLinearGradient(0,swY-36,0,swY+36);
+      sg.addColorStop(0,'rgba(180,80,255,0)');
+      sg.addColorStop(0.5,'rgba(180,80,255,0.028)');
+      sg.addColorStop(1,'rgba(180,80,255,0)');
+      cx.fillStyle=sg;
+      cx.fillRect(W*0.12,swY-36,W*0.78,72);
+    }
+
+    raf=requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();},{passive:true});
+  resize();frame();
+})();
+
+/* ── Section 2: Cinematic Brain Background ──
+   Strategy: draw a real lateral-view brain silhouette as the
+   visual anchor, then fill it with a luminous neural network.
+   The brain SHAPE must be immediately recognizable.
+   The network lives INSIDE the form — not scattered in space.
+*/
+(function(){
+  const cv = document.getElementById('std-brain-canvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  let W, H, nodes = [], edges = [], particles = [], t = 0, raf;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize() {
+    W = cv.offsetWidth; H = cv.offsetHeight;
+    cv.width = W * DPR; cv.height = H * DPR;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.scale(DPR, DPR);
+    build();
+  }
+
+  /* ── Brain geometry: large lateral silhouette ──
+     Positioned right-of-centre so left side has space for text.
+     Scale: 58% of section height. */
+  function getBrain() {
+    const bw = H * 0.82;   // brain width
+    const bh = H * 0.78;   // brain height
+    const cx = W * 0.64;   // horizontal centre (shifted right)
+    const cy = H * 0.50;   // vertical centre
+    return { cx, cy, rx: bw / 2, ry: bh / 2 };
+  }
+
+  /* Bézier brain outline — same lateral MRI shape used in hero */
+  function makeBrainPath(cx, cy, rx, ry, sc) {
+    sc = sc || 1;
+    const p = (nx, ny) => [cx + (nx - 0.5) * rx * 2 * sc, cy + (ny - 0.5) * ry * 2 * sc];
+    return [
+      { t: 'M', v: p(0.50, 0.10) },
+      { t: 'C', v: [...p(0.36, 0.02), ...p(0.18, 0.07), ...p(0.15, 0.20)] },
+      { t: 'C', v: [...p(0.11, 0.32), ...p(0.10, 0.47), ...p(0.14, 0.57)] },
+      { t: 'C', v: [...p(0.17, 0.67), ...p(0.24, 0.77), ...p(0.33, 0.84)] },
+      { t: 'C', v: [...p(0.41, 0.90), ...p(0.47, 0.93), ...p(0.55, 0.92)] },
+      { t: 'C', v: [...p(0.63, 0.91), ...p(0.73, 0.85), ...p(0.80, 0.77)] },
+      { t: 'C', v: [...p(0.88, 0.67), ...p(0.91, 0.55), ...p(0.89, 0.43)] },
+      { t: 'C', v: [...p(0.87, 0.31), ...p(0.80, 0.17), ...p(0.69, 0.11)] },
+      { t: 'C', v: [...p(0.62, 0.04), ...p(0.56, 0.04), ...p(0.50, 0.10)] },
+      { t: 'Z' },
+    ];
+  }
+
+  function tracePath(segs) {
+    ctx.beginPath();
+    segs.forEach(s => {
+      if (s.t === 'M') ctx.moveTo(s.v[0], s.v[1]);
+      else if (s.t === 'C') ctx.bezierCurveTo(s.v[0],s.v[1],s.v[2],s.v[3],s.v[4],s.v[5]);
+      else if (s.t === 'Z') ctx.closePath();
+    });
+  }
+
+  /* Sulci — 12 anatomical fissure lines */
+  function getSulci(cx, cy, rx, ry) {
+    const p = (nx, ny) => [cx + (nx - 0.5) * rx * 2, cy + (ny - 0.5) * ry * 2];
+    return [
+      [p(0.50,0.11), p(0.48,0.26), p(0.46,0.42), p(0.48,0.57)],
+      [p(0.18,0.47), p(0.33,0.53), p(0.51,0.55), p(0.67,0.51)],
+      [p(0.23,0.61), p(0.37,0.64), p(0.53,0.64), p(0.67,0.59)],
+      [p(0.43,0.12), p(0.41,0.26), p(0.40,0.41), p(0.42,0.53)],
+      [p(0.58,0.12), p(0.58,0.25), p(0.60,0.40), p(0.63,0.51)],
+      [p(0.67,0.17), p(0.71,0.30), p(0.73,0.44)],
+      [p(0.23,0.20), p(0.28,0.32), p(0.33,0.46), p(0.35,0.58)],
+      [p(0.18,0.34), p(0.23,0.43), p(0.28,0.54)],
+      [p(0.76,0.30), p(0.80,0.43), p(0.82,0.56)],
+      [p(0.81,0.26), p(0.85,0.38), p(0.85,0.50)],
+      [p(0.29,0.71), p(0.43,0.74), p(0.58,0.72)],
+      [p(0.37,0.37), p(0.49,0.39), p(0.61,0.37)],
+    ];
+  }
+
+  /* Cortical regions — nodes constrained to brain interior */
+  const REGION_DEFS = [
+    [0.20,0.22,'a',1.0],[0.23,0.34,'a',0.9],[0.20,0.45,'a',0.78],[0.27,0.18,'a',0.85],[0.17,0.33,'a',0.65],[0.27,0.51,'a',0.55],
+    [0.43,0.17,'b',1.0],[0.42,0.29,'b',0.95],[0.42,0.41,'b',0.88],[0.44,0.51,'b',0.76],[0.39,0.58,'b',0.65],
+    [0.60,0.18,'c',0.88],[0.61,0.30,'c',0.92],[0.62,0.42,'c',0.80],[0.66,0.26,'c',0.72],[0.64,0.50,'c',0.84],[0.70,0.36,'c',0.62],
+    [0.77,0.32,'d',0.58],[0.79,0.44,'d',0.68],[0.82,0.56,'d',0.58],[0.74,0.54,'d',0.52],[0.83,0.37,'d',0.58],[0.80,0.28,'d',0.48],
+    [0.31,0.65,'e',0.74],[0.42,0.69,'e',0.84],[0.54,0.71,'e',0.78],[0.64,0.67,'e',0.68],[0.28,0.75,'e',0.58],[0.52,0.77,'e',0.58],
+    [0.48,0.35,'f',0.62],[0.50,0.45,'f',0.74],[0.51,0.55,'f',0.68],[0.53,0.63,'f',0.58],
+  ];
+
+  /* Colour palette: blue-violet-indigo — distinct from hero's fuchsia */
+  const CLR = {
+    a: [170, 90, 255],
+    b: [140, 75, 245],
+    c: [120, 85, 255],
+    d: [100, 65, 225],
+    e: [160, 80, 250],
+    f: [150, 85, 240],
+  };
+
+  function build() {
+    const { cx, cy, rx, ry } = getBrain();
+    nodes = REGION_DEFS.map(([nx, ny, k, aw]) => {
+      const x = cx + (nx - 0.5) * rx * 2;
+      const y = cy + (ny - 0.5) * ry * 2;
+      return {
+        x, y, ox: x, oy: y, k, aw,
+        r: 1.3 + aw * 1.0,
+        phase: Math.random() * Math.PI * 2,
+        period: 3.0 + Math.random() * 4.5,
+        fireT: -Math.random() * 7,
+        vx: (Math.random() - 0.5) * 0.04,
+        vy: (Math.random() - 0.5) * 0.04,
+        spiking: false,
+      };
+    });
+
+    edges = [];
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const dx = a.ox - b.ox, dy = a.oy - b.oy, d = Math.sqrt(dx*dx + dy*dy);
+        const same = a.k === b.k;
+        const thresh = same ? rx * 0.54 : rx * 0.30;
+        if (d < thresh) edges.push({ i, j, same, base: same ? 0.08 : 0.026 });
+      }
+    }
+  }
+
+  function spawnParticle(a, b) {
+    particles.push({ ax:a.x, ay:a.y, bx:b.x, by:b.y, prog:0, spd:0.005+Math.random()*0.007, k:a.k, alive:true });
+  }
+
+  /* ── DRAW BRAIN SILHOUETTE: 7 depth passes ── */
+  function drawBrainBody(cx, cy, rx, ry) {
+    // Pass 1: Outermost atmospheric corona
+    tracePath(makeBrainPath(cx, cy, rx, ry, 1.12));
+    ctx.strokeStyle = 'rgba(140,70,240,0.04)';
+    ctx.lineWidth = 10; ctx.stroke();
+
+    // Pass 2: Wide soft glow ring
+    tracePath(makeBrainPath(cx, cy, rx, ry, 1.07));
+    ctx.strokeStyle = 'rgba(150,80,245,0.07)';
+    ctx.lineWidth = 6; ctx.stroke();
+
+    // Pass 3: Tighter glow
+    tracePath(makeBrainPath(cx, cy, rx, ry, 1.03));
+    ctx.strokeStyle = 'rgba(160,85,248,0.10)';
+    ctx.lineWidth = 3.5; ctx.stroke();
+
+    // Pass 4: Main luminous contour — the visible brain edge
+    tracePath(makeBrainPath(cx, cy, rx, ry, 1.0));
+    ctx.strokeStyle = 'rgba(175,95,255,0.42)';
+    ctx.lineWidth = 1.4; ctx.stroke();
+
+    // Pass 5: Interior fill — volumetric presence
+    tracePath(makeBrainPath(cx, cy, rx, ry, 1.0));
+    const vg = ctx.createRadialGradient(cx - rx*0.08, cy - ry*0.12, 0, cx, cy, rx * 1.05);
+    vg.addColorStop(0,   'rgba(130,50,220,0.14)');
+    vg.addColorStop(0.35,'rgba(90,30,180,0.08)');
+    vg.addColorStop(0.70,'rgba(50,10,120,0.04)');
+    vg.addColorStop(1,   'rgba(10,2,40,0)');
+    ctx.fillStyle = vg; ctx.fill();
+
+    // Pass 6: Inner subsurface contour — cortical depth
+    tracePath(makeBrainPath(cx, cy, rx, ry, 0.90));
+    ctx.strokeStyle = 'rgba(155,80,240,0.14)';
+    ctx.lineWidth = 0.7; ctx.stroke();
+
+    // Pass 7: Deep inner structure
+    tracePath(makeBrainPath(cx, cy, rx, ry, 0.78));
+    ctx.strokeStyle = 'rgba(130,60,210,0.08)';
+    ctx.lineWidth = 0.5; ctx.stroke();
+  }
+
+  /* Sulci */
+  function drawSulci(cx, cy, rx, ry) {
+    getSulci(cx, cy, rx, ry).forEach(pts => {
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      pts.length === 4
+        ? ctx.bezierCurveTo(pts[1][0],pts[1][1],pts[2][0],pts[2][1],pts[3][0],pts[3][1])
+        : ctx.quadraticCurveTo(pts[1][0],pts[1][1],pts[2][0],pts[2][1]);
+      ctx.strokeStyle = 'rgba(170,90,255,0.13)';
+      ctx.lineWidth = 0.75; ctx.stroke();
+    });
+  }
+
+  /* Deep atmospheric glow behind the brain */
+  function drawAtmosphere(cx, cy, rx) {
+    let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rx * 1.7);
+    g.addColorStop(0,   'rgba(120,40,210,0.12)');
+    g.addColorStop(0.38,'rgba(85,20,180,0.07)');
+    g.addColorStop(0.70,'rgba(50,8,130,0.03)');
+    g.addColorStop(1,   'rgba(10,2,50,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rx * 1.75, 0, Math.PI * 2); ctx.fill();
+
+    let g2 = ctx.createRadialGradient(cx - rx*0.1, cy - rx*0.15, 0, cx, cy, rx * 0.85);
+    g2.addColorStop(0,   'rgba(160,70,255,0.10)');
+    g2.addColorStop(0.40,'rgba(110,40,200,0.05)');
+    g2.addColorStop(1,   'rgba(40,5,100,0)');
+    ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(cx, cy, rx * 0.90, 0, Math.PI * 2); ctx.fill();
+
+    // Rim light from top-left
+    let g3 = ctx.createRadialGradient(cx - rx*0.5, cy - rx*0.55, 0, cx - rx*0.2, cy - rx*0.18, rx * 1.1);
+    g3.addColorStop(0,   'rgba(200,100,255,0.07)');
+    g3.addColorStop(0.5, 'rgba(140,60,220,0.03)');
+    g3.addColorStop(1,   'rgba(60,10,140,0)');
+    ctx.fillStyle = g3; ctx.beginPath(); ctx.arc(cx, cy, rx * 1.15, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.013;
+
+    if (!nodes.length) { raf = requestAnimationFrame(frame); return; }
+    const { cx, cy, rx, ry } = getBrain();
+
+    // 1. Wide atmosphere
+    drawAtmosphere(cx, cy, rx);
+
+    // 2. Brain silhouette — recognizable form
+    drawBrainBody(cx, cy, rx, ry);
+
+    // 3. Sulci — anatomical definition
+    drawSulci(cx, cy, rx, ry);
+
+    // 4. Update nodes
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      n.vx += (n.ox - n.x) * 0.003; n.vy += (n.oy - n.y) * 0.003;
+      n.vx *= 0.97; n.vy *= 0.97;
+      n.spiking = false;
+      if (t - n.fireT > n.period) {
+        if (Math.random() < 0.32) {
+          n.spiking = true;
+          edges.filter(e => (e.i === nodes.indexOf(n) || e.j === nodes.indexOf(n)) && Math.random() < 0.3)
+            .forEach(e => spawnParticle(n, e.i === nodes.indexOf(n) ? nodes[e.j] : nodes[e.i]));
+        }
+        n.fireT = t; n.period = 3.0 + Math.random() * 4.5;
+      }
+    });
+
+    // 5. Edges — neural connections within the brain form
+    edges.forEach(e => {
+      const a = nodes[e.i], b = nodes[e.j];
+      const dx = a.x - b.x, dy = a.y - b.y, d = Math.sqrt(dx*dx + dy*dy);
+      const maxD = e.same ? rx * 0.56 : rx * 0.32;
+      if (d > maxD) return;
+      const active = a.spiking || b.spiking;
+      let alpha = e.base * (1 - d / maxD) * (active ? 2.8 : 1);
+      alpha = Math.min(alpha, 0.36);
+      const cl = CLR[a.k];
+      const mx = (a.x+b.x)/2 + (dy*0.06), my = (a.y+b.y)/2 - (dx*0.06);
+      if (active) {
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(mx, my, b.x, b.y);
+        ctx.strokeStyle = `rgba(${cl[0]},${cl[1]},${cl[2]},${alpha * 0.15})`;
+        ctx.lineWidth = e.same ? 2.8 : 1.8; ctx.stroke();
+      }
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(mx, my, b.x, b.y);
+      ctx.strokeStyle = `rgba(${cl[0]},${cl[1]},${cl[2]},${alpha})`;
+      ctx.lineWidth = e.same ? 0.7 : 0.42; ctx.stroke();
+    });
+
+    // 6. Energy particles
+    particles = particles.filter(p => p.alive);
+    particles.forEach(p => {
+      p.prog += p.spd;
+      if (p.prog >= 1) { p.alive = false; return; }
+      const x = p.ax + (p.bx - p.ax) * p.prog;
+      const y = p.ay + (p.by - p.ay) * p.prog;
+      const a = Math.min((1 - Math.abs(p.prog - 0.5) * 2) * 0.82, 1);
+      const cl = CLR[p.k];
+      ctx.beginPath(); ctx.arc(x, y, 3.2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${cl[0]},${cl[1]},${cl[2]},${a * 0.18})`; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${cl[0]},${cl[1]},${cl[2]},${a})`; ctx.fill();
+    });
+
+    // 7. Node soma dots
+    nodes.forEach(n => {
+      const firing = t - n.fireT < 0.30;
+      const rest = 0.18 + 0.09 * Math.sin(t / n.period * Math.PI * 2 + n.phase) * n.aw;
+      const al = firing ? 0.82 : rest;
+      const r = n.r * (firing ? 1.75 : 1.0);
+      const cl = CLR[n.k];
+      if (firing) {
+        [4.5, 2.6, 1.6].forEach((mr, i) => {
+          ctx.beginPath(); ctx.arc(n.x, n.y, r * mr, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(${cl[0]},${cl[1]},${cl[2]},${[0.04,0.08,0.13][i]})`; ctx.fill();
+        });
+      }
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${cl[0]},${cl[1]},${cl[2]},${al})`; ctx.fill();
+    });
+
+    // 8. Slow thalamo-cortical wave
+    const sw = ((t * 0.020) % 1.22);
+    const swY = cy - ry * 0.90 + sw * ry * 1.80;
+    if (swY > cy - ry * 1.05 && swY < cy + ry * 1.05) {
+      const sg = ctx.createLinearGradient(0, swY - 38, 0, swY + 38);
+      sg.addColorStop(0,   'rgba(150,70,255,0)');
+      sg.addColorStop(0.5, 'rgba(150,70,255,0.022)');
+      sg.addColorStop(1,   'rgba(150,70,255,0)');
+      ctx.fillStyle = sg;
+      ctx.fillRect(cx - rx * 1.15, swY - 38, rx * 2.3, 76);
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', () => { cancelAnimationFrame(raf); resize(); }, { passive: true });
+  resize(); frame();
+})();
+
+/* ── TOKEN DONUT CHART — redesigned blue-violet biotech palette, 400px ── */
+(function(){
+  const cv = document.getElementById('tok-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio||1,2);
+  const SIZE = 450;
+  cv.width = SIZE*DPR; cv.height = SIZE*DPR;
+  cv.style.width = SIZE+'px'; cv.style.height = SIZE+'px';
+  ctx.scale(DPR,DPR);
+
+  const cx = SIZE/2, cy = SIZE/2;
+  const outerR = SIZE/2 - 10;
+  const innerR = outerR * 0.55;
+  const gapAngle = 0.016;
+
+  // Blue-violet-indigo palette — calm, biotech, premium
+  const SEGS = [
+    { pct:0.40, color:'#2a80e8', glow:'rgba(42,128,232,0.55)', label:'40%' },
+    { pct:0.25, color:'#3a60d0', glow:'rgba(58,96,208,0.48)',  label:'25%' },
+    { pct:0.20, color:'#6a44c8', glow:'rgba(106,68,200,0.44)', label:'20%' },
+    { pct:0.10, color:'#3aacb8', glow:'rgba(58,172,184,0.40)', label:'10%' },
+    { pct:0.05, color:'#4a5a90', glow:'rgba(74,90,144,0.28)',  label:'5%'  },
+  ];
+
+  const TOTAL_ARC = Math.PI * 2;
+  const startAngle = -Math.PI / 2;
+
+  function draw(progress) {
+    ctx.clearRect(0,0,SIZE,SIZE);
+
+    // Outer atmospheric glow ring
+    const glowGrad = ctx.createRadialGradient(cx,cy,innerR,cx,cy,outerR+24);
+    glowGrad.addColorStop(0,'rgba(40,100,220,0.00)');
+    glowGrad.addColorStop(0.6,'rgba(40,100,220,0.06)');
+    glowGrad.addColorStop(1,'rgba(40,80,180,0.00)');
+    ctx.fillStyle=glowGrad;
+    ctx.beginPath(); ctx.arc(cx,cy,outerR+24,0,Math.PI*2); ctx.fill();
+
+    // Background track
+    ctx.beginPath();
+    ctx.arc(cx,cy,outerR,0,Math.PI*2);
+    ctx.arc(cx,cy,innerR,Math.PI*2,0,true);
+    ctx.fillStyle='rgba(10,12,26,0.80)';
+    ctx.fill();
+
+    let angle = startAngle;
+    SEGS.forEach((seg,i) => {
+      const sweep = seg.pct * TOTAL_ARC * progress - gapAngle;
+      if(sweep <= 0){ angle += seg.pct * TOTAL_ARC * progress; return; }
+      const endAngle = angle + sweep;
+      const midAngle = angle + sweep/2;
+
+      // Glow pass
+      ctx.save();
+      ctx.shadowColor = seg.glow;
+      ctx.shadowBlur = i===0 ? 28 : i===1 ? 20 : 12;
+      ctx.beginPath();
+      ctx.arc(cx,cy,outerR,angle,endAngle);
+      ctx.arc(cx,cy,innerR,endAngle,angle,true);
+      ctx.closePath();
+      ctx.fillStyle = seg.color; ctx.fill();
+      ctx.restore();
+
+      // Crisp layer with gradient
+      const grad = ctx.createLinearGradient(
+        cx+Math.cos(midAngle)*innerR, cy+Math.sin(midAngle)*innerR,
+        cx+Math.cos(midAngle)*outerR, cy+Math.sin(midAngle)*outerR
+      );
+      const base = seg.color;
+      grad.addColorStop(0, base+'cc');
+      grad.addColorStop(1, base+'ff');
+      ctx.beginPath();
+      ctx.arc(cx,cy,outerR,angle,endAngle);
+      ctx.arc(cx,cy,innerR,endAngle,angle,true);
+      ctx.closePath();
+      ctx.fillStyle = grad; ctx.fill();
+
+      // Percentage label on every segment
+      if(progress > 0.80){
+        const labelR = (outerR + innerR) / 2;
+        const lx = cx + Math.cos(midAngle) * labelR;
+        const ly = cy + Math.sin(midAngle) * labelR;
+        const la = Math.min((progress-0.80)/0.20, 1);
+        // Only show if segment is wide enough to fit text
+        const segDeg = seg.pct * 360;
+        if(segDeg >= 18) {
+          ctx.save();
+          ctx.globalAlpha = la;
+          const fsize = seg.pct >= 0.20 ? 15 : seg.pct >= 0.10 ? 13 : 11;
+          ctx.font = `700 ${fsize}px 'Instrument Sans', sans-serif`;
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 6;
+          ctx.fillText(seg.label, lx, ly);
+          ctx.restore();
+        }
+      }
+
+      angle = endAngle + gapAngle;
+    });
+
+    // Inner glass circle
+    ctx.beginPath(); ctx.arc(cx,cy,innerR-1,0,Math.PI*2);
+    const ig = ctx.createRadialGradient(cx-innerR*0.15,cy-innerR*0.20,0,cx,cy,innerR);
+    ig.addColorStop(0,'rgba(18,22,48,0.96)');
+    ig.addColorStop(1,'rgba(6,8,18,0.99)');
+    ctx.fillStyle=ig; ctx.fill();
+
+    // Inner rim — cool blue glow
+    ctx.beginPath(); ctx.arc(cx,cy,innerR-1,0,Math.PI*2);
+    ctx.strokeStyle='rgba(60,120,220,0.14)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx,cy,innerR+1,0,Math.PI*2);
+    ctx.strokeStyle='rgba(40,80,180,0.06)'; ctx.lineWidth=2; ctx.stroke();
+
+    // ── Center text: BYNX + supply — drawn at exact canvas centre ──
+    if(progress > 0.50) {
+      const ta = Math.min((progress - 0.50) / 0.30, 1);
+      ctx.save();
+      ctx.globalAlpha = ta;
+
+      // BYNX — bold, white
+      ctx.font = "900 " + Math.round(innerR * 0.52) + "px 'Instrument Sans', sans-serif";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(100,170,255,0.50)';
+      ctx.shadowBlur = 20;
+      ctx.fillText('BYNX', cx, cy - innerR * 0.13);
+
+      // Supply number
+      ctx.font = "600 " + Math.round(innerR * 0.155) + "px 'DM Mono', monospace";
+      ctx.fillStyle = 'rgba(200,215,255,0.88)';
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.fillText('100,000,000', cx, cy + innerR * 0.13);
+
+      // TOKENS label
+      ctx.font = "500 " + Math.round(innerR * 0.135) + "px 'DM Mono', monospace";
+      ctx.fillStyle = 'rgba(160,180,230,0.65)';
+      ctx.fillText('TOKENS', cx, cy + innerR * 0.30);
+
+      ctx.restore();
+    }
+  }
+
+  let start = null;
+  const duration = 1400;
+  function animate(ts){
+    if(!start) start = ts;
+    const p = Math.min((ts-start)/duration,1);
+    draw(1 - Math.pow(1-p,3));
+    if(p < 1) requestAnimationFrame(animate);
+  }
+
+  const obs = new IntersectionObserver((e)=>{
+    if(e[0].isIntersecting){ requestAnimationFrame(animate); obs.disconnect(); }
+  },{threshold:0.15});
+  obs.observe(cv);
+})();
+</script>
+</body>
+</html>
